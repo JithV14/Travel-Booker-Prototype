@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Hotel Booking Details</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #f7f9f4;
+  --card: #ffffff;
+  --border: #b8d96e;
+  --accent: #f26522;
+  --accent-hover: #d9541a;
+  --text: #1a1a1a;
+  --muted: #888;
+  --input-bg: #f0f4ea;
+  --input-border: #d4e6a0;
+  --link: #2563eb;
+  --shadow: 0 8px 40px rgba(100,140,30,0.10);
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 36px 16px 60px;
+  color: var(--text);
+}
+
+.page-wrap { width: 100%; max-width: 560px; position: relative; z-index: 1; }
+
+.back-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  color: var(--link); font-size: 0.93rem; font-weight: 500;
+  text-decoration: none; margin-bottom: 24px; transition: gap 0.2s;
+}
+.back-link:hover { gap: 10px; color: #1a40b0; }
+.back-link svg { width: 16px; height: 16px; }
+
+.card {
+  background: var(--card); border: 2.5px solid var(--border);
+  border-radius: 18px; padding: 40px 44px 44px;
+  box-shadow: var(--shadow);
+  animation: fadeUp 0.55s cubic-bezier(.22,.68,0,1.2) both;
+}
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
+
+.card-title {
+  font-family: 'Playfair Display', serif; font-size: 1.85rem; font-weight: 700;
+  text-align: center; margin-bottom: 34px; color: var(--text); letter-spacing: -0.01em;
+}
+
+.section-divider { border: none; border-top: 1.5px dashed var(--border); margin: 26px 0; }
+
+.form-group { margin-bottom: 20px; }
+
+label { display: block; font-size: 0.85rem; font-weight: 600; color: #444; margin-bottom: 7px; letter-spacing: 0.03em; text-transform: uppercase; }
+label .sub { font-weight: 400; font-size: 0.78rem; color: var(--muted); text-transform: none; letter-spacing: 0; margin-left: 5px; }
+
+input[type="text"], input[type="email"], input[type="tel"], input[type="number"], input[type="date"], select, textarea {
+  width: 100%; background: var(--input-bg); border: 1.5px solid var(--input-border);
+  border-radius: 9px; padding: 10px 14px; font-family: 'DM Sans', sans-serif;
+  font-size: 0.97rem; color: var(--text); outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+input:focus, select:focus, textarea:focus { border-color: var(--border); background: #fff; box-shadow: 0 0 0 3px rgba(184,217,110,0.22); }
+
+textarea { resize: vertical; min-height: 72px; }
+
+.date-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: end; }
+
+.select-wrap { position: relative; }
+.select-wrap::after { content: '▾'; position: absolute; right: 14px; top: 50%; transform: translateY(-50%); pointer-events: none; color: var(--muted); font-size: 0.9rem; }
+.select-wrap select { padding-right: 34px; cursor: pointer; }
+
+.row-2, .name-passport-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+.add-btn {
+  background: none; border: 1.5px dashed var(--border); border-radius: 8px;
+  color: #5a8a00; font-size: 0.85rem; font-weight: 600; padding: 7px 14px; margin-top: 8px;
+  cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+}
+.add-btn:hover { background: #f0f9d6; border-color: #8ab800; }
+
+.submit-row { display: flex; justify-content: flex-end; margin-top: 32px; }
+
+.btn-book {
+  background: var(--accent); color: #fff; border: none; border-radius: 10px;
+  padding: 13px 32px; font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 700;
+  cursor: pointer; display: flex; align-items: center; gap: 8px;
+}
+.btn-book:hover { background: var(--accent-hover); transform: translateY(-2px); }
+.btn-book:active { transform: translateY(0); }
+
+/* ── NATIONALITY TOGGLE ── */
+.nationality-toggle { display: flex; gap: 10px; margin-top: 4px; }
+.toggle-btn {
+  flex: 1; padding: 11px 16px; border-radius: 9px; border: 1.5px solid var(--input-border);
+  background: var(--input-bg); font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
+  font-weight: 500; color: #555; cursor: pointer; text-align: center; transition: all 0.2s;
+}
+.toggle-btn:hover { border-color: var(--border); background: #eaf5c8; }
+.toggle-btn.active { border-color: var(--accent); background: #fff3ee; color: var(--accent); font-weight: 700; }
+
+/* ── PASSPORT SLIDE ── */
+#passport-section { overflow: hidden; transition: max-height 0.35s ease, opacity 0.3s ease, margin 0.3s ease; max-height: 0; opacity: 0; margin-bottom: 0; }
+#passport-section.visible { max-height: 120px; opacity: 1; margin-bottom: 20px; }
+
+@media (max-width: 540px) { .date-row, .row-2, .name-passport-row, .nationality-toggle { grid-template-columns: 1fr; flex-direction: column; } }
+</style>
+</head>
+
+<body>
+<div class="page-wrap">
+
+  
+
+  <div class="card">
+    <h1 class="card-title">Hotel Booking Details</h1>
+
+    <!-- HOTEL NAME -->
+    <div class="form-group">
+      <label>Hotel Name</label>
+      <input type="text" placeholder="Enter hotel name" />
+    </div>
+
+    <!-- STAY PERIOD -->
+    <div class="form-group">
+      <span class="period-link">Select Stay Period</span>
+      <div class="date-row">
+        <div>
+          <label style="text-transform:none; font-size:0.78rem; color:var(--muted); margin-bottom:4px;">From</label>
+          <input type="date" />
+        </div>
+        <div>
+          <label style="text-transform:none; font-size:0.78rem; color:var(--muted); margin-bottom:4px;">To</label>
+          <input type="date" />
+        </div>
+      </div>
+    </div>
+
+    <hr class="section-divider" />
+
+    <!-- ADULTS & KIDS -->
+    <div class="row-2">
+      <div class="form-group">
+        <label>Number of Adults</label>
+        <div class="select-wrap">
+          <select>
+            <option value="1">Min: 1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6+</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Number of Kids <span class="sub">Age under 12</span></label>
+        <div class="select-wrap">
+          <select>
+            <option value="0">--</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4+</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <hr class="section-divider" />
+
+    <!-- GUEST DETAILS -->
+    <div class="form-group">
+      <label>Full Name(s)</label>
+      <input type="text" placeholder="Enter full name(s)" />
+      <button class="add-btn" type="button">
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="6.5" y1="1" x2="6.5" y2="12"/>
+          <line x1="1" y1="6.5" x2="12" y2="6.5"/>
+        </svg>
+        Add Guest
+      </button>
+    </div>
+
+    <!-- NATIONALITY TOGGLE -->
+    <div class="form-group">
+      <label>Guest Nationality</label>
+      <div class="nationality-toggle">
+        <button type="button" class="toggle-btn active" id="btn-local" onclick="setNationality('local')">
+          🇱🇰 Local Resident
+        </button>
+        <button type="button" class="toggle-btn" id="btn-foreign" onclick="setNationality('foreign')">
+          ✈️ Foreign National
+        </button>
+      </div>
+    </div>
+
+    <!-- Passport Details -->
+    <div id="passport-section">
+      <label>Passport Details <span class="sub">Required for foreign nationals</span></label>
+      <input type="text" id="passport-input" placeholder="Passport number / details" />
+    </div>
+
+    <div class="name-passport-row">
+      <div class="form-group">
+        <label>E-mail</label>
+        <input type="email" placeholder="your@email.com" />
+      </div>
+      <div class="form-group">
+        <label>Phone Number</label>
+        <input type="tel" placeholder="+1 000 000 0000" />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Special Notes</label>
+      <textarea placeholder="Any special requests or notes..."></textarea>
+    </div>
+
+   <div class="submit-row">
+  <a href="payment.html" class="btn-book">
+    Book &amp; Proceed to Pay
+  </a>
+</div>
+  </div>
+</div>
+
+<script>
+function setNationality(type) {
+  const passportSection = document.getElementById('passport-section');
+  const passportInput   = document.getElementById('passport-input');
+  const btnLocal        = document.getElementById('btn-local');
+  const btnForeign      = document.getElementById('btn-foreign');
+
+  if (type === 'foreign') {
+    passportSection.classList.add('visible');
+    passportInput.required = true;
+    btnForeign.classList.add('active');
+    btnLocal.classList.remove('active');
+  } else {
+    passportSection.classList.remove('visible');
+    passportInput.required = false;
+    btnLocal.classList.add('active');
+    btnForeign.classList.remove('active');
+  }
+}
+</script>
+</body>
+</html>

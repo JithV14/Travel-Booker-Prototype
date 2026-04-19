@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Travel Solutions – TravelBooker</title>
+<link rel="stylesheet" href="Global.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+<style>
+/* ── HERO ── */
+.hero {
+  background: var(--navy);
+  padding: 4rem 2.5rem;
+  text-align: center;
+  position: relative; overflow: hidden;
+}
+.hero::after {
+  content:''; position:absolute; bottom:0; left:0; right:0; height:4px;
+  background: var(--teal);
+}
+.hero::before {
+  content:''; position:absolute; inset:0;
+  background: radial-gradient(ellipse at 50% 80%, rgba(29,196,152,0.15) 0%, transparent 65%);
+  pointer-events: none;
+}
+.hero h1 { font-family: var(--font-head); font-size: 36px; color: white; margin-bottom: 1rem; }
+.hero p { font-size: 16px; color: rgba(255,255,255,0.65); max-width: 580px; margin: 0 auto; }
+
+/* ── EXPLORE SECTION ── */
+.explore-section { padding: 3rem 2.5rem; max-width: 900px; margin: 0 auto; text-align: center; }
+.explore-section h2 { font-family: var(--font-head); font-size: 24px; color: var(--navy); margin-bottom: 1.5rem; }
+.explore-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+.explore-btn {
+  display: flex; align-items: center; gap: 10px;
+  padding: 16px 36px; border-radius: var(--radius-lg);
+  text-decoration: none; font-size: 16px; font-weight: 600;
+  font-family: var(--font-body); transition: all 0.25s;
+  box-shadow: var(--shadow-md);
+}
+.explore-btn .btn-icon { font-size: 22px; }
+.explore-btn.packages { background: var(--navy); color: white; }
+.explore-btn.packages:hover { background: var(--navy-light); transform: translateY(-3px); }
+.explore-btn.hotels { background: var(--teal); color: white; }
+.explore-btn.hotels:hover { background: var(--teal-dark); transform: translateY(-3px); }
+
+/* ── FEATURES ── */
+.features { background: var(--navy); display: flex; flex-wrap: wrap; }
+.feature-item { flex: 1; min-width: 200px; padding: 2.5rem 2rem; text-align: center; border-right: 1px solid rgba(255,255,255,0.1); }
+.feature-item:last-child { border-right: none; }
+.icon { font-size: 36px; margin-bottom: 0.75rem; }
+.feature-item h4 { color: white; font-size: 15px; font-weight: 600; margin-bottom: 0.4rem; }
+.feature-item p { color: rgba(255,255,255,0.5); font-size: 13px; }
+
+/* ── POPULAR PACKAGES PREVIEW ── */
+.popular-section { padding: 3rem 2.5rem; background: white; }
+.popular-section h2 { font-family: var(--font-head); font-size: 22px; color: var(--navy); margin-bottom: 0.4rem; text-align: center; }
+.popular-sub { font-size: 14px; color: var(--text-mid); text-align: center; margin-bottom: 2rem; }
+.popular-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.25rem; max-width: 1100px; margin: 0 auto; }
+.pop-card {
+  background: var(--light-bg); border-radius: var(--radius-lg);
+  overflow: hidden; border: 1px solid var(--border);
+  transition: box-shadow 0.25s, transform 0.25s;
+}
+.pop-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-4px); }
+.pop-card img { width: 100%; height: 180px; object-fit: cover; display: block; }
+.pop-card-body { padding: 1rem 1.25rem; }
+.pop-card-body h3 { font-family: var(--font-head); font-size: 14px; color: var(--navy); margin-bottom: 0.3rem; }
+.pop-card-body p { font-size: 12px; color: var(--text-mid); margin-bottom: 0.75rem; }
+.pop-card-body a {
+  display: inline-block; padding: 7px 18px;
+  background: var(--navy); color: white;
+  border-radius: var(--radius-md); font-size: 12px; font-weight: 600;
+  text-decoration: none; transition: background 0.2s;
+}
+.pop-card-body a:hover { background: var(--teal); }
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-top">
+      <a class="logo" href="Home.html">
+        <img src="Travel Booker logo design.png" alt="logo" class="logo-imgg" />
+        <span>TravelBooker</span>
+      </a> <br><br><br>
+      <div class="nav-right"> <br>
+        <ul class="nav-menu"> <br><br>
+          <li><a href="index.html" class="active">Home</a></li> <br><br>
+          <li><a href="about_us.html">About Us</a></li>
+          <li><a href="contact_us.html">Contact Us</a></li>
+
+          <span id="auth-zone" style="display: flex; gap: 10px; align-items: center; margin-left: 15px;">
+            <li><a href="login.html" class="sign-button">Login</a></li>
+            <li><a href="profileSelect_signup.html" class="sign-button">Sign Up</a></li>
+          </span>
+
+        </ul>
+        <ul class="nav-solutions">
+          <li class="sol-travel"><a href="travel_solutions.html" class="solutions-button">Travel Solutions</a></li>
+          <li class="sol-corp"><a href="corporateSolutions.html" class="solutions-button">Corporate Solutions</a></li>
+          <li class="sol-agent"><a href="agentSolutions.html" class="solutions-button">Agent Solutions</a></li>
+        </ul>
+      </div>
+    </div><br><br>
+  </nav> <br> <br>
+
+<div class="page-body">
+
+  <div class="hero">
+    <h1>Experience Travel Without Limits.</h1>
+    <p>Enjoy handpicked destinations, customized itineraries, and hassle-free bookings designed to match your unique travel style.</p>
+  </div>
+
+  <div class="explore-section">
+    <h2>Let's Explore</h2>
+    <div class="explore-buttons">
+      <a href="travelPackage.html" class="explore-btn packages"><span class="btn-icon">🧳</span> Packages</a>
+      <a href="hotels.html" class="explore-btn hotels"><span class="btn-icon">🏨</span> Hotels</a>
+    </div>
+  </div>
+
+  <div class="features">
+    <div class="feature-item"><div class="icon">🛡️</div><h4>100% Safe Booking</h4><p>Secure &amp; trusted payments</p></div>
+    <div class="feature-item"><div class="icon">🌍</div><h4>200+ Destinations</h4><p>Worldwide coverage</p></div>
+    <div class="feature-item"><div class="icon">💰</div><h4>Best Price Guarantee</h4><p>We match any lower price</p></div>
+    <div class="feature-item"><div class="icon">📞</div><h4>24/7 Support</h4><p>Always here to help</p></div>
+  </div>
+
+  <div class="popular-section">
+    <h2>Popular Packages</h2>
+    <p class="popular-sub">Start your journey with one of our most-loved Sri Lanka experiences</p>
+    <div class="popular-grid">
+      <div class="pop-card">
+        <img src="Galle.jpg" alt="Galle"/>
+        <div class="pop-card-body">
+          <h3>Galle – Coastal Heritage</h3>
+          <p>Historic fort city, beaches &amp; colonial charm.</p>
+          <a href="travelPackage.html">View Package</a>
+        </div>
+      </div>
+      <div class="pop-card">
+        <img src="Ella-train.jpg" alt="Ella"/>
+        <div class="pop-card-body">
+          <h3>Ella – Emerald Peak Escape</h3>
+          <p>Nine Arch Bridge, tea trails &amp; misty mountains.</p>
+          <a href="travelPackage.html">View Package</a>
+        </div>
+      </div>
+      <div class="pop-card">
+        <img src="SIGIRIYA.jpg" alt="Sigiriya"/>
+        <div class="pop-card-body">
+          <h3>Sigiriya – Lion's Peak</h3>
+          <p>Ancient rock fortress &amp; jungle safaris.</p>
+          <a href="travelPackage.html">View Package</a>
+        </div>
+      </div>
+      
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-container">
+      <div class="footer-column">
+        <h4>TravelBooker</h4>
+        <p>Travel Booker.com</p>
+        <p>+94 87 345 2779</p>
+        <a href="mailto:info@travelbooker.com">info@travelbooker.com</a>
+      </div>
+      <div class="footer-column">
+        <h4>Services</h4>
+        <a href="travel_solutions.html">Travel Solutions</a>
+        <a href="corporateSolutions.html">Corporate Solutions</a>
+        <a href="agentSolutions.html">Agent Solutions</a>
+      </div>
+      <div class="footer-column">
+        <h4>Popular Destinations</h4>
+        <a href="travelPackage.html">Galle</a><a href="travelPackage.html">Ella</a>
+        <a href="travelPackage.html">Sigiriya</a><a href="travelPackage.html">Trincomalee</a>
+      </div>
+      <div class="footer-column">
+        <h4>Quick Links</h4>
+        <a href="index.html">Home</a>
+        <a href="contact_us.html">Contact Us</a>
+        <a href="login.html">Login</a>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2025 <span>TravelBooker</span> · All Rights Reserved · Sri Lanka</div>
+  </footer>
+
+</div>
+
+<script>
+//login javascriptssss
+    document.addEventListener("DOMContentLoaded", function () {
+      // 1. Check browser storage for login data
+      const isLoggedIn = localStorage.getItem('isLoggedIn');
+      const userEmail = localStorage.getItem('userEmail');
+      const userRole = localStorage.getItem('userRole');
+
+      // 2. If logged in, modify the UI
+      if (isLoggedIn === 'true' && userEmail) {
+        const authZone = document.getElementById('auth-zone');
+        const solutionsNav = document.querySelector('.nav-solutions');
+
+        // --- ROLE-BASED SOLUTION FILTERING ---
+        if (solutionsNav) {
+          // First, hide ALL solution tabs
+          const allTabs = document.querySelectorAll('.nav-solutions li');
+          allTabs.forEach(tab => tab.style.display = 'none');
+
+          // Now, show ONLY the one relevant to the logged-in user
+          if (userRole === 'traveler') {
+            document.querySelector('.sol-travel').style.display = 'block';
+          }
+          else if (userRole === 'corporate') {
+            document.querySelector('.sol-corp').style.display = 'block';
+          }
+          else if (userRole === 'agent') {
+            document.querySelector('.sol-agent').style.display = 'block';
+          }
+        }
+
+        // Determine dashboard link for the "Hi, Name" button
+        let dashLink = "travellerProfile.html";
+        if (userRole === 'corporate') dashLink = "corporateProfile.html";
+        if (userRole === 'agent') dashLink = "agentProfile.html";
+
+        const userName = userEmail.split('@')[0];
+
+        // Replace Login/Signup with Profile Link + Logout Button
+        authZone.innerHTML = `
+        <li style="list-style:none; display:flex; align-items:center; gap:15px;">
+            <a href="${dashLink}" style="color: var(--teal); font-weight:600; text-decoration:none;">
+               <i class="fas fa-user-circle"></i> Hi, ${userName}
+            </a>
+            <a href="javascript:void(0)" onclick="handleLogout()" 
+               style="color: #ff4d4d; font-size: 11px; border: 1px solid #ff4d4d; padding: 2px 6px; border-radius: 4px; text-decoration:none;">
+               Logout
+            </a>
+        </li>
+    `;
+      }
+
+    });
+
+    // 3. The Logout Function
+    function handleLogout() {
+      if (confirm("Are you sure you want to logout?")) {
+        localStorage.clear(); // Clears email, role, and login status
+        window.location.href = "index.html"; // Redirect to public home
+      }
+    }
+
+</script>
+</body>
+</html>

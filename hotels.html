@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tour Packages – TravelBooker</title>
+  <link rel="stylesheet" href="Global.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <style>
+    /* ── PAGE HERO ── */
+    .pkg-hero {
+      background: var(--navy);
+      padding: 3rem 2.5rem 2.5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pkg-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 60% 50%, rgba(29, 196, 152, 0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .pkg-hero h1 {
+      font-family: var(--font-head);
+      font-size: 32px;
+      color: white;
+      margin-bottom: 0.6rem;
+    }
+
+    .pkg-hero p {
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.65);
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    /* ── CARDS GRID ── */
+    .cards-section {
+      padding: 3rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .cards-section h2 {
+      font-family: var(--font-head);
+      font-size: 22px;
+      color: var(--navy);
+      margin-bottom: 0.4rem;
+    }
+
+    .cards-subtitle {
+      font-size: 14px;
+      color: var(--text-mid);
+      margin-bottom: 2rem;
+    }
+
+    .content-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    /* Flip Card */
+    .content-card {
+      height: 380px;
+      perspective: 1000px;
+      cursor: pointer;
+    }
+
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: var(--radius-lg);
+    }
+
+    .content-card:hover .card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .card-front,
+    .card-back {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+
+    .card-front {
+      background: var(--card-bg);
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border);
+    }
+
+    .card-front .card-image img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .card-front .card-content {
+      padding: 1.25rem;
+    }
+
+    .card-front .card-content h3 {
+      font-family: var(--font-head);
+      font-size: 15px;
+      color: var(--navy);
+      margin-bottom: 0.4rem;
+    }
+
+    .card-front .card-content p {
+      font-size: 13px;
+      color: var(--text-mid);
+      line-height: 1.6;
+    }
+
+    .card-back {
+      background: var(--navy);
+      transform: rotateY(180deg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .back-content {
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .back-content h3 {
+      font-family: var(--font-head);
+      font-size: 16px;
+      color: var(--teal);
+      margin-bottom: 1rem;
+    }
+
+    .back-content p {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.8);
+      line-height: 1.8;
+      margin-bottom: 1.5rem;
+    }
+
+    .cta-button {
+      display: inline-block;
+      padding: 10px 24px;
+      background: var(--teal);
+      color: white;
+      border-radius: var(--radius-md);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+
+    .cta-button:hover {
+      background: var(--teal-dark);
+    }
+
+    /* ── DESTINATION BANNER ── */
+    .dest-banner {
+      background: var(--navy);
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 0;
+      margin-top: 2rem;
+    }
+
+    .dest-item {
+      position: relative;
+      height: 200px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .dest-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s;
+    }
+
+    .dest-item:hover img {
+      transform: scale(1.06);
+    }
+
+    .dest-item .dest-label {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(transparent, rgba(30, 58, 95, 0.9));
+      padding: 1rem 0.75rem 0.6rem;
+      color: white;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    /* Overlay */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.65);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    /* Modal Box */
+    .modal-box {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 35px 30px;
+      width: 100%;
+      max-width: 620px;
+      max-height: 88vh;
+      overflow-y: auto;
+      position: relative;
+      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.35);
+      animation: popIn 0.3s ease;
+    }
+
+    @keyframes popIn {
+      from {
+        transform: scale(0.85);
+        opacity: 0;
+      }
+
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    /* Close Button */
+    .modal-close {
+      position: absolute;
+      top: 14px;
+      right: 18px;
+      background: #f0f0f0;
+      border: none;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      font-size: 16px;
+      cursor: pointer;
+      color: #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-close:hover {
+      background: #e0e0e0;
+    }
+
+    /* Header */
+    .modal-header {
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid #f0f0f0;
+    }
+
+    .modal-title {
+      font-size: 22px;
+      color: #1a3a5c;
+      margin: 0 0 6px;
+    }
+
+    .modal-location {
+      color: #777;
+      font-size: 14px;
+      margin: 0 0 10px;
+    }
+
+    .modal-price {
+      background: #e8734a;
+      color: white;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: bold;
+      display: inline-block;
+    }
+
+    /* Grid */
+    .modal-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    .modal-section {
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 14px 16px;
+    }
+
+    .modal-section h4 {
+      margin: 0 0 10px;
+      color: #1a3a5c;
+      font-size: 14px;
+    }
+
+    .modal-section ul {
+      margin: 0;
+      padding-left: 16px;
+      color: #555;
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    /* Book Now */
+    .book-now-btn {
+      width: 100%;
+      padding: 14px;
+      background: #e8734a;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .book-now-btn:hover {
+      background: #d4623a;
+    }
+
+    /* Scrollbar */
+    .modal-box::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .modal-box::-webkit-scrollbar-thumb {
+      background: #ccc;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="navbar">
+    <div class="nav-top">
+      <a class="logo" href="Home.html">
+        <img src="Travel Booker logo design.png" alt="logo" class="logo-imgg" />
+        <span>TravelBooker</span>
+      </a> <br><br><br>
+      <div class="nav-right"> <br>
+        <ul class="nav-menu"> <br><br>
+          <li><a href="index.html" class="active">Home</a></li> <br><br>
+          <li><a href="about_us.html">About Us</a></li>
+          <li><a href="contact_us.html">Contact Us</a></li>
+
+          <span id="auth-zone" style="display: flex; gap: 10px; align-items: center; margin-left: 15px;">
+            <li><a href="login.html" class="sign-button">Login</a></li>
+            <li><a href="profileSelect_signup.html" class="sign-button">Sign Up</a></li>
+          </span>
+
+        </ul>
+        <ul class="nav-solutions">
+          <li class="sol-travel"><a href="travel_solutions.html" class="solutions-button">Travel Solutions</a></li>
+          <li class="sol-corp"><a href="corporateSolutions.html" class="solutions-button">Corporate Solutions</a></li>
+          <li class="sol-agent"><a href="agentSolutions.html" class="solutions-button">Agent Solutions</a></li>
+        </ul>
+      </div>
+    </div><br><br>
+  </nav> <br> <br>
+
+  <div class="page-body">
+
+    <div class="pkg-hero">
+      <h1>Explore Our Hotel Packages</h1>
+      <p>Hover over any destination card to discover details and start planning your perfect Sri Lanka adventure.</p>
+    </div>
+
+    <div class="cards-section">
+      <h2>Find Your Perfect Stay</h2>
+      <p class="cards-subtitle">Hover a card to see more details — click "Learn More" to explore fully</p>
+
+      <div class="content-cards">
+
+        <!-- Galle -->
+        <div class="content-card">
+          <div class="card-inner">
+            <div class="card-front">
+              <div class="card-image"><img src="grand.jpeg" alt="Galle" /></div>
+              <div class="card-content">
+                <h3>Cinnamon Grand Colombo</h3>
+                <p>Where luxury meets the heart of the city.</p>
+              </div>
+            </div>
+            <div class="card-back">
+              <div class="back-content">
+                <h3>Cinnamon Grand Colombo</h3>
+                <p>A luxury city hotel in Colombo offering world-class dining, modern comfort, and easy access to
+                  business and shopping areas.</p>
+                <a href="#" class="cta-button" onclick="openModal('cinnamon'); return false;">Learn More</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ella -->
+        <div class="content-card">
+          <div class="card-inner">
+            <div class="card-front">
+              <div class="card-image"><img src="jetwing.jpeg" alt="Ella" /></div>
+              <div class="card-content">
+                <h3>Jetwing Blue – Negombo</h3>
+                <p>Where ocean breeze meets timeless elegance.</p>
+              </div>
+            </div>
+            <div class="card-back">
+              <div class="back-content">
+                <h3>Jetwing Blue – Negombo</h3>
+                <p>A beachfront resort in Negombo offering relaxing ocean views, modern amenities, and a peaceful
+                  tropical escape.</p>
+                <a href="#" class="cta-button" onclick="openModal('jetwing'); return false;">View details</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sigiriya -->
+        <div class="content-card">
+          <div class="card-inner">
+            <div class="card-front">
+              <div class="card-image"><img src="dambulla.jpeg" alt="Sigiriya" /></div>
+              <div class="card-content">
+                <h3>Heritance Kandalama – Dambulla</h3>
+                <p>Where nature and architecture become one.</p>
+              </div>
+            </div>
+            <div class="card-back">
+              <div class="back-content">
+                <h3>Heritance Kandalama – Dambulla</h3>
+                <p>A unique eco-luxury hotel surrounded by nature, offering breathtaking views of the Sigiriya and
+                  Dambulla region.</p>
+                <a href="#" class="cta-button" onclick="openModal('kandalama'); return false;">View details</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Trincomalee -->
+        <div class="content-card">
+          <div class="card-inner">
+            <div class="card-front">
+              <div class="card-image"><img src="uga.jpeg" alt="Trincomalee" /></div>
+              <div class="card-content">
+                <h3>Uga Ulagalla – Anuradhapura</h3>
+                <p>Luxury rooted in nature’s serenity.</p>
+              </div>
+            </div>
+            <div class="card-back">
+              <div class="back-content">
+                <h3>Uga Ulagalla – Anuradhapura</h3>
+                <p>A luxury boutique resort offering private villas, tranquility, and a premium cultural retreat
+                  experience.</p>
+                <a href="#" class="cta-button" onclick="openModal('ulagalla'); return false;">View details</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Arugam Bay -->
+        <div class="content-card">
+          <div class="card-inner">
+            <div class="card-front">
+              <div class="card-image"><img src="Cape_wel.jpeg" alt="Arugam Bay" /></div>
+              <div class="card-content">
+                <h3>Cape Weligama – Weligama</h3>
+                <p>Clifftop luxury with endless ocean views.</p>
+              </div>
+            </div>
+            <div class="card-back">
+              <div class="back-content">
+                <h3>Cape Weligama – Weligama</h3>
+                <p>A cliff-top luxury resort offering stunning ocean views, infinity pools, and a high-end coastal
+                  experience.</p>
+                <a href="#" class="cta-button" onclick="openModal('weligama'); return false;">View details</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Jaffna -->
+        <div class="content-card">
+          <div class="card-inner">
+            <div class="card-front">
+              <div class="card-image"><img src="tangalle.jpeg" alt="Jaffna" /></div>
+              <div class="card-content">
+                <h3>Ranna 212 By Auro Resorts</h3>
+                <p>Where golden sands meet peaceful escape.</p>
+              </div>
+            </div>
+            <div class="card-back">
+              <div class="back-content">
+                <h3>Ranna 212 By Auro Resorts</h3>
+                <p>A tranquil beachfront retreat where golden sands, swaying palms, and modern comforts come together to
+                  create the perfect escape from the rush of everyday life</p>
+                <a href="#" class="cta-button" onclick="openModal('ranna'); return false;">View details</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal-overlay" id="hotelModal">
+      <div class="modal-box">
+        <button class="modal-close" onclick="closeModal()">✕</button>
+        <div class="modal-header">
+          <h2 class="modal-title" id="modal-name"></h2>
+          <p class="modal-location" id="modal-location"></p>
+          <span class="modal-price" id="modal-price"></span>
+        </div>
+        <div class="modal-grid">
+          <div class="modal-section">
+            <h4>📦 Includes</h4>
+            <ul id="modal-includes"></ul>
+          </div>
+          <div class="modal-section">
+            <h4>🏄 Activities</h4>
+            <ul id="modal-activities"></ul>
+          </div>
+          <div class="modal-section">
+            <h4>✨ Features</h4>
+            <ul id="modal-features"></ul>
+          </div>
+          <div class="modal-section">
+            <h4>🎁 Offers</h4>
+            <ul id="modal-offers"></ul>
+          </div>
+        </div>
+        <button class="book-now-btn" id="modal-book-btn" href="bookingPage_hotels.html">Book Now</button>
+      </div>
+    </div>
+
+    <footer> <!-- your existing footer continues here -->
+
+      <footer>
+        <div class="footer-container">
+          <div class="footer-column">
+            <h4>TravelBooker</h4>
+            <p>Travel Booker.com</p>
+            <p>+94 87 345 2779</p>
+            <a href="mailto:info@travelbooker.com">info@travelbooker.com</a>
+          </div>
+          <div class="footer-column">
+            <h4>Services</h4>
+            <a href="travel_solutions.html">Travel Solutions</a>
+            <a href="corporateSolutions.html">Corporate Solutions</a>
+            <a href="agentSolutions.html">Agent Solutions</a>
+          </div>
+          <div class="footer-column">
+            <h4>Popular Destinations</h4>
+            <a href="#">Galle</a><a href="#">Ella</a>
+            <a href="#">Sigiriya</a><a href="#">Trincomalee</a>
+          </div>
+          <div class="footer-column">
+            <h4>Quick Links</h4>
+            <a href="index.html">Home</a>
+            <a href="contact_us.html">Contact Us</a>
+            <a href="login.html">Login</a>
+          </div>
+        </div>
+        <div class="footer-bottom">© 2025 <span>TravelBooker</span> · All Rights Reserved · Sri Lanka</div>
+      </footer>
+
+  </div>
+
+  <script>
+    const hotelData = {
+      "cinnamon": {
+        name: "Cinnamon Grand Colombo",
+        location: "📍 Colombo, Sri Lanka  |  2 Nights / 3 Days (Flexible stay)",
+        price: "LKR 35,000 per night",
+        includes: ["5★ rooms", "Breakfast", "Wi-Fi", "Pool & gym", "Meeting facilities"],
+        activities: ["City shopping", "Dining", "Spa", "City tour"],
+        features: ["🟢 Kids Friendly", "🚑 Near major hospitals", "Ideal for business travel"],
+        offers: ["Welcome drink", "Spa discount", "Room upgrade (subject to availability)"]
+      },
+      "jetwing": {
+        name: "Jetwing Blue",
+        location: "📍 Negombo, Sri Lanka  |  2 Nights / 3 Days (Flexible stay)",
+        price: "LKR 28,000 per night",
+        includes: ["4★ rooms", "Breakfast", "Wi-Fi", "Pool & beach access"],
+        activities: ["Beach time", "Water sports", "Lagoon tours", "Cycling"],
+        features: ["🟢 Kids Friendly", "🚑 Near medical facilities", "Family-friendly environment"],
+        offers: ["Welcome drink", "Dining discount", "Early check-in (subject to availability)"]
+      },
+      "kandalama": {
+        name: "Heritance Kandalama",
+        location: "📍 Dambulla, Sri Lanka  |  2 Nights / 3 Days (Flexible stay)",
+        price: "LKR 20,000 per night",
+        includes: ["5★ rooms", "Breakfast", "Wi-Fi", "Pool", "Nature tours"],
+        activities: ["Sigiriya visit", "Temple tour", "Nature walks"],
+        features: ["🟢 Kids Friendly", "🚑 Near Dambulla medical services", "Nature-focused stay"],
+        offers: ["Welcome drink", "Free nature walk", "Tour discounts"]
+      },
+      "ulagalla": {
+        name: "Uga Ulagalla",
+        location: "📍 Anuradhapura, Sri Lanka  |  2 Nights / 3 Days (Flexible stay)",
+        price: "LKR 35,000 per night",
+        includes: ["Private villas", "Breakfast", "Wi-Fi", "Bicycles", "Butler service"],
+        activities: ["Heritage tours", "Cycling", "Spa"],
+        features: ["🔴 Adults Only", "🚑 Near Anuradhapura medical center", "Quiet luxury experience"],
+        offers: ["Welcome drink", "Free cycling", "Honeymoon packages"]
+      },
+      "weligama": {
+        name: "Cape Weligama",
+        location: "📍 Weligama, Sri Lanka  |  2 Nights / 3 Days (Flexible stay)",
+        price: "LKR 25,000 per night",
+        includes: ["5★ villas", "Breakfast", "Wi-Fi", "Pool", "Butler service"],
+        activities: ["Whale watching", "Surfing", "Spa", "Sunset dining"],
+        features: ["🔴 Adults Only", "🚑 Near Matara medical facilities", "Premium coastal stay"],
+        offers: ["Welcome drink", "Spa discount", "Sunset experience"]
+      },
+      "ranna": {
+        name: "Ranna 212 By Auro Resorts",
+        location: "📍 Tangalle, Sri Lanka  |  2 Nights / 3 Days (Flexible stay)",
+        price: "LKR 36,000 per night",
+        includes: ["4★ rooms", "Breakfast", "Wi-Fi", "Pool & beach access"],
+        activities: ["Beach relaxation", "Lagoon visits", "Turtle watching", "Cycling"],
+        features: ["🟢 Kids Friendly", "🚑 Access to nearby Tangalle medical facilities", "Quiet and less crowded location"],
+        offers: ["Welcome drink", "Dining discounts", "Early check-in (subject to availability)"]
+      }
+    };
+
+    function openModal(hotelKey) {
+  const h = hotelData[hotelKey]; // 'h' is the correct variable
+  if (!h) return;
+
+  document.getElementById('modal-name').textContent = h.name;
+  document.getElementById('modal-location').textContent = h.location;
+  document.getElementById('modal-price').textContent = "💰 " + h.price;
+
+  const fill = (id, arr) => {
+    const ul = document.getElementById(id);
+    ul.innerHTML = arr.map(i => `<li>${i}</li>`).join('');
+  };
+
+  fill('modal-includes', h.includes);
+  fill('modal-activities', h.activities);
+  fill('modal-features', h.features);
+  fill('modal-offers', h.offers);
+
+  // FIX: Update the button to redirect when clicked
+  const bookBtn = document.getElementById('modal-book-btn');
+  bookBtn.onclick = function() {
+    window.location.href = `bookingPage_hotels.html?package=${encodeURIComponent(h.name)}`;
+  };
+
+  document.getElementById('hotelModal').classList.add('active');
+}
+
+    
+
+
+    function closeModal() {
+      document.getElementById('hotelModal').classList.remove('active');
+    }
+
+    // Close on outside click
+    document.getElementById('hotelModal').addEventListener('click', function (e) {
+      if (e.target === this) closeModal();
+    });
+
+    //login javascriptssss
+    document.addEventListener("DOMContentLoaded", function () {
+      // 1. Check browser storage for login data
+      const isLoggedIn = localStorage.getItem('isLoggedIn');
+      const userEmail = localStorage.getItem('userEmail');
+      const userRole = localStorage.getItem('userRole');
+
+      // 2. If logged in, modify the UI
+      if (isLoggedIn === 'true' && userEmail) {
+        const authZone = document.getElementById('auth-zone');
+        const solutionsNav = document.querySelector('.nav-solutions');
+
+        // --- ROLE-BASED SOLUTION FILTERING ---
+        if (solutionsNav) {
+          // First, hide ALL solution tabs
+          const allTabs = document.querySelectorAll('.nav-solutions li');
+          allTabs.forEach(tab => tab.style.display = 'none');
+
+          // Now, show ONLY the one relevant to the logged-in user
+          if (userRole === 'traveler') {
+            document.querySelector('.sol-travel').style.display = 'block';
+          }
+          else if (userRole === 'corporate') {
+            document.querySelector('.sol-corp').style.display = 'block';
+          }
+          else if (userRole === 'agent') {
+            document.querySelector('.sol-agent').style.display = 'block';
+          }
+        }
+
+        // Determine dashboard link for the "Hi, Name" button
+        let dashLink = "travellerProfile.html";
+        if (userRole === 'corporate') dashLink = "corporateProfile.html";
+        if (userRole === 'agent') dashLink = "agentProfile.html";
+
+        const userName = userEmail.split('@')[0];
+
+        // Replace Login/Signup with Profile Link + Logout Button
+        authZone.innerHTML = `
+        <li style="list-style:none; display:flex; align-items:center; gap:15px;">
+            <a href="${dashLink}" style="color: var(--teal); font-weight:600; text-decoration:none;">
+               <i class="fas fa-user-circle"></i> Hi, ${userName}
+            </a>
+            <a href="javascript:void(0)" onclick="handleLogout()" 
+               style="color: #ff4d4d; font-size: 11px; border: 1px solid #ff4d4d; padding: 2px 6px; border-radius: 4px; text-decoration:none;">
+               Logout
+            </a>
+        </li>
+    `;
+      }
+
+    });
+
+    // 3. The Logout Function
+    function handleLogout() {
+      if (confirm("Are you sure you want to logout?")) {
+        localStorage.clear(); // Clears email, role, and login status
+        window.location.href = "index.html"; // Redirect to public home
+      }
+    }
+  </script>
+</body>
+
+</html>

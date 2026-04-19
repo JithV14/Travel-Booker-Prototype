@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tour Packages – TravelBooker</title>
+  <link rel="stylesheet" href="Global.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <style>
+    /* ── PAGE HERO ── */
+    .pkg-hero {
+      background: var(--navy);
+      padding: 3rem 2.5rem 2.5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pkg-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 60% 50%, rgba(29, 196, 152, 0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .pkg-hero h1 {
+      font-family: var(--font-head);
+      font-size: 32px;
+      color: white;
+      margin-bottom: 0.6rem;
+    }
+
+    .pkg-hero p {
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.65);
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    /* ── CARDS GRID ── */
+    .cards-section {
+      padding: 3rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .cards-section h2 {
+      font-family: var(--font-head);
+      font-size: 22px;
+      color: var(--navy);
+      margin-bottom: 0.4rem;
+    }
+
+    .cards-subtitle {
+      font-size: 14px;
+      color: var(--text-mid);
+      margin-bottom: 2rem;
+    }
+
+    .content-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    /* Flip Card */
+    .content-card {
+      height: 380px;
+      perspective: 1000px;
+      cursor: pointer;
+    }
+
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: var(--radius-lg);
+    }
+
+    .content-card:hover .card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .card-front,
+    .card-back {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+
+    .card-front {
+      background: var(--card-bg);
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border);
+    }
+
+    .card-front .card-image img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .card-front .card-content {
+      padding: 1.25rem;
+    }
+
+    .card-front .card-content h3 {
+      font-family: var(--font-head);
+      font-size: 15px;
+      color: var(--navy);
+      margin-bottom: 0.4rem;
+    }
+
+    .card-front .card-content p {
+      font-size: 13px;
+      color: var(--text-mid);
+      line-height: 1.6;
+    }
+
+    .card-back {
+      background: var(--navy);
+      transform: rotateY(180deg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .back-content {
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .back-content h3 {
+      font-family: var(--font-head);
+      font-size: 16px;
+      color: var(--teal);
+      margin-bottom: 1rem;
+    }
+
+    .back-content p {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.8);
+      line-height: 1.8;
+      margin-bottom: 1.5rem;
+    }
+
+    .cta-button {
+      display: inline-block;
+      padding: 10px 24px;
+      background: var(--teal);
+      color: white;
+      border-radius: var(--radius-md);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+
+    .cta-button:hover {
+      background: var(--teal-dark);
+    }
+
+    /* ── DESTINATION BANNER ── */
+    .dest-banner {
+      background: var(--navy);
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 0;
+      margin-top: 2rem;
+    }
+
+    .dest-item {
+      position: relative;
+      height: 200px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .dest-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s;
+    }
+
+    .dest-item:hover img {
+      transform: scale(1.06);
+    }
+
+    .dest-item .dest-label {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(transparent, rgba(30, 58, 95, 0.9));
+      padding: 1rem 0.75rem 0.6rem;
+      color: white;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+
+    /* ── MODAL OVERLAY ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 25, 47, 0.75);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    /* ── MODAL BOX ── */
+    .modal-box {
+      background: #fff;
+      border-radius: 22px;
+      width: 100%;
+      max-width: 660px;
+      max-height: 92vh;
+      overflow-y: auto;
+      position: relative;
+      animation: popIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes popIn {
+      from {
+        transform: scale(0.88) translateY(20px);
+        opacity: 0;
+      }
+
+      to {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .modal-box::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    .modal-box::-webkit-scrollbar-thumb {
+      background: #ddd;
+      border-radius: 10px;
+    }
+
+    /* ── HERO BANNER ── */
+    .modal-hero {
+      position: relative;
+      height: 200px;
+      background: linear-gradient(135deg, #1a3a5c 0%, #0f6e56 100%);
+      border-radius: 22px 22px 0 0;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+      padding: 24px 28px;
+    }
+
+    .modal-hero-emoji {
+      position: absolute;
+      top: 24px;
+      right: 28px;
+      font-size: 60px;
+      opacity: 0.18;
+    }
+
+    .modal-hero-badge {
+      position: absolute;
+      top: 20px;
+      left: 28px;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .modal-hero-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.3;
+      max-width: 80%;
+    }
+
+    .modal-hero-sub {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.7);
+      margin-top: 4px;
+    }
+
+    /* ── CLOSE BTN ── */
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 34px;
+      height: 34px;
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      border-radius: 50%;
+      font-size: 16px;
+      color: #fff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+      z-index: 10;
+    }
+
+    .modal-close:hover {
+      background: rgba(255, 255, 255, 0.35);
+    }
+
+    /* ── BODY ── */
+    .modal-body {
+      padding: 24px 28px 28px;
+    }
+
+    /* Pills row */
+    .modal-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 22px;
+    }
+
+    .pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .pill-price {
+      background: #fff3ee;
+      color: #c24a1e;
+      border: 1px solid #f5c4b3;
+    }
+
+    .pill-date {
+      background: #e8f4ff;
+      color: #185fa5;
+      border: 1px solid #b5d4f4;
+    }
+
+    .pill-days {
+      background: #eaf3de;
+      color: #3b6d11;
+      border: 1px solid #c0dd97;
+    }
+
+    /* Section */
+    .modal-section-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #999;
+      margin-bottom: 12px;
+    }
+
+    /* Includes grid */
+    .includes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .include-item {
+      background: #f7fafc;
+      border: 1px solid #e8edf2;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 13px;
+      color: #1a3a5c;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .include-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #1dc498;
+      flex-shrink: 0;
+    }
+
+    /* Activities */
+    .activities-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .activity-tag {
+      background: #f0f8ff;
+      border: 1px solid #b5d4f4;
+      color: #185fa5;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 5px 12px;
+      border-radius: 6px;
+    }
+
+    /* Offers */
+    .offers-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    .offer-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #fffbf0;
+      border: 1px solid #fac775;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: #633806;
+      font-weight: 500;
+    }
+
+    .offer-star {
+      font-size: 14px;
+      color: #ef9f27;
+      flex-shrink: 0;
+    }
+
+    /* Divider */
+    .modal-divider {
+      height: 1px;
+      background: #f0f0f0;
+      margin: 0 0 20px;
+    }
+
+    /* Book Now */
+    .book-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .book-price-label {
+      flex: 1;
+    }
+
+    .book-price-label span {
+      font-size: 12px;
+      color: #999;
+      display: block;
+    }
+
+    .book-price-label strong {
+      font-size: 20px;
+      font-weight: 700;
+      color: #1a3a5c;
+    }
+
+    .book-now-btn {
+      padding: 13px 32px;
+      background: #e8734a;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      letter-spacing: 0.3px;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .book-now-btn:hover {
+      background: #c8532a;
+    }
+
+    .book-now-btn:active {
+      transform: scale(0.97);
+    }
+
+    .btn-container {
+      padding: 1rem 2.5rem;
+      text-align: center;
+      background: var(--light-bg);
+      width: 309%;
+    }
+
+    .btn-packages {
+      display: inline-block;
+      padding: 13px 36px;
+      background: var(--navy);
+      color: white;
+      border-radius: var(--radius-lg);
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: var(--font-body);
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .btn-packages:hover {
+      background: var(--navy-light);
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="navbar">
+    <div class="nav-top">
+      <a class="logo" href="index.html">
+        <img src="Travel Booker logo design.png" alt="logo" class="logo-imgg" />
+        <span>TravelBooker</span>
+      </a> <br><br><br>
+      <div class="nav-right"> <br>
+        <ul class="nav-menu"> <br><br>
+          <li><a href="index.html" class="active">Home</a></li> <br><br>
+          <li><a href="about_us.html">About Us</a></li>
+          <li><a href="contact_us.html">Contact Us</a></li>
+
+          <span id="auth-zone" style="display: flex; gap: 10px; align-items: center; margin-left: 15px;">
+            <li><a href="login.html" class="sign-button">Login</a></li>
+            <li><a href="profileSelect_signup.html" class="sign-button">Sign Up</a></li>
+          </span>
+
+        </ul>
+        <ul class="nav-solutions">
+          <li class="sol-travel"><a href="travel_solutions.html" class="solutions-button">Travel Solutions</a></li>
+          <li class="sol-corp"><a href="corporateSolutions.html" class="solutions-button">Corporate Solutions</a></li>
+          <li class="sol-agent"><a href="agentSolutions.html" class="solutions-button">Agent Solutions</a></li>
+        </ul>
+      </div>
+    </div><br><br>
+  </nav> <br> <br>
+
+  <div class="page-body">
+
+    <div class="pkg-hero">
+      <h1>Explore Our Tour Packages</h1>
+      <p>Hover over any destination card to discover details and start planning your perfect Sri Lanka adventure.</p>
+    </div>
+
+    <div class="cards-section">
+      <h2>Handpicked Destinations</h2>
+      <p class="cards-subtitle">Hover a card to see more details — click "Learn More" to explore fully</p>
+
+      <div class="content-cards">
+
+        <!-- Galle -->
+        <div class="content-card">
+          <div class="card-inner">
+            <div class="card-front">
+              <div class="card-image"><img src="Galle.jpg" alt="Galle" /></div>
+              <div class="card-content">
+                <h3>Galle – Coastal Heritage Escape</h3>
+                <p>A historic fortress city where colonial charm meets the wild Indian Ocean.</p>
+              </div>
+            </div>
+            <div class="card-back">
+              <div class="back-content">
+                <h3>Galle – Coastal Heritage Escape</h3>
+                <p>A charming coastal city known for its historic beauty, beaches, and relaxing atmosphere. Explore the
+                  famous Galle Fort, visit cultural landmarks, and enjoy scenic ocean views.</p>
+                <a href="#" class="cta-button" onclick="openModal('galle'); return false;">View details</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ella -->
+        <div class="content-card">
+          <div class="card-inner">
+            <div class="card-front">
+              <div class="card-image"><img src="Ella-train.jpg" alt="Ella" /></div>
+              <div class="card-content">
+                <h3>Ella – The Emerald Peak Escape</h3>
+                <p>A scenic mountain escape famous for iconic bridges, lush tea trails, and misty peaks.</p>
+              </div>
+            </div>
+            <div class="card-back">
+              <div class="back-content">
+                <h3>Ella – The Emerald Peak Escape</h3>
+                <p>A peaceful hill country destination known for its cool climate, green mountains, and scenic views.
+                  Visit the Nine Arch Bridge, hike through tea plantations, and enjoy relaxing nature experiences.</p>
+                <a href="#" class="cta-button" onclick="openModal('ella'); return false;">View details</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sigiriya -->
+        <div class="content-card">
+          <div class="card-inner">
+            <div class="card-front">
+              <div class="card-image"><img src="SIGIRIYA.jpg" alt="Sigiriya" /></div>
+              <div class="card-content">
+                <h3>Sigiriya – The Lion's Peak Expedition</h3>
+                <p>A grand rock fortress rising from the jungle with ancient ruins and epic views.</p>
+              </div>
+            </div>
+            <div class="card-back">
+              <div class="back-content">
+                <h3>Sigiriya – The Lion's Peak Expedition</h3>
+                <p>A majestic rock fortress towering over the jungle, offering a thrilling climb to ancient ruins and
+                  panoramic views. World-class adventure where historic wonders meet wild elephant safaris.</p>
+                <a href="#" class="cta-button" onclick="openModal('sigiriya'); return false;">View details</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Trincomalee -->
+        <div class="content-card">
+          <div class="card-inner">
+            <div class="card-front">
+              <div class="card-image"><img src="trincoo.jpg" alt="Trincomalee" /></div>
+              <div class="card-content">
+                <h3>Trincomalee – The Deep Blue Discovery</h3>
+                <p>A coastal sanctuary where ancient cliffside temples meet pristine coral beaches.</p>
+              </div>
+            </div>
+            <div class="card-back">
+              <div class="back-content">
+                <h3>Trincomalee – The Deep Blue Discovery</h3>
+                <p>A beautiful coastal destination known for its clear beaches, rich history, and relaxing atmosphere.
+                  Visit Nilaveli Beach, explore cultural sites, and enjoy whale watching adventures.</p>
+                <a href="#" class="cta-button" onclick="openModal('trinco'); return false;">View details</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Arugam Bay -->
+        <div class="content-card">
+          <div class="card-inner">
+            <div class="card-front">
+              <div class="card-image"><img src="aru2.jpg" alt="Arugam Bay" /></div>
+              <div class="card-content">
+                <h3>Arugam Bay – The Surf &amp; Safari Trail</h3>
+                <p>A legendary surf-and-safari hub where the waves meet the wild.</p>
+              </div>
+            </div>
+            <div class="card-back">
+              <div class="back-content">
+                <h3>Arugam Bay – The Surf &amp; Safari Trail</h3>
+                <p>A world-class surf destination on the southeast coast, blending legendary point breaks with a relaxed
+                  bohemian atmosphere. Beyond the waves, enjoy thrilling lagoon safaris and wildlife encounters.</p>
+                <a href="#" class="cta-button" onclick="openModal('arugam'); return false;">View details</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Jaffna -->
+        <div class="content-card">
+          <div class="card-inner">
+            <div class="card-front">
+              <div class="card-image"><img src="jaffna-sri-lanka.jpg" alt="Jaffna" /></div>
+              <div class="card-content">
+                <h3>Jaffna – The Northern Cultural Gem</h3>
+                <p>A unique cultural destination rich in Tamil heritage, ancient temples, and coastal beauty.</p>
+              </div>
+            </div>
+            <div class="card-back">
+              <div class="back-content">
+                <h3>Jaffna – The Northern Cultural Gem</h3>
+                <p>Explore the ancient Nallur Kandaswamy Temple, the historic Jaffna Fort, and the serene islands
+                  accessible by causeway. A truly distinctive Sri Lankan experience.</p>
+                <a href="#" class="cta-button" onclick="openModal('jaffna'); return false;">View details</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="btn-container">
+          <a href="hotels.html" class="btn-packages">See More Hotel Packages →</a>
+        </div>
+
+
+      </div>
+    </div>
+
+
+
+    <!-- ── MODAL HTML ── -->
+    <div class="modal-overlay" id="destModal">
+      <div class="modal-box">
+
+        <!-- Hero -->
+        <div class="modal-hero" id="modal-hero">
+          <button class="modal-close" onclick="closeModal()">✕</button>
+          <span class="modal-hero-emoji" id="modal-emoji"></span>
+          <span class="modal-hero-badge" id="modal-badge"></span>
+          <div>
+            <div class="modal-hero-title" id="modal-name"></div>
+            <div class="modal-hero-sub" id="modal-location"></div>
+          </div>
+        </div>
+
+        <!-- Body -->
+        <div class="modal-body">
+
+          <!-- Pills -->
+          <div class="modal-pills">
+            <span class="pill pill-price">💰 <span id="modal-price"></span></span>
+            <span class="pill pill-date">📅 <span id="modal-date"></span></span>
+            <span class="pill pill-days">🌙 <span id="modal-days"></span></span>
+          </div>
+
+          <!-- Includes -->
+          <div class="modal-section-title">What's included</div>
+          <div class="includes-grid" id="modal-includes"></div>
+
+          <div class="modal-divider"></div>
+
+          <!-- Activities -->
+          <div class="modal-section-title">Activities</div>
+          <div class="activities-list" id="modal-activities"></div>
+
+          <div class="modal-divider"></div>
+
+          <!-- Offers -->
+          <div class="modal-section-title">Special offers</div>
+          <div class="offers-list" id="modal-offers"></div>
+
+          <!-- Book row -->
+          <div class="book-row">
+            <div class="book-price-label">
+              <span>Starting from</span>
+              <strong id="modal-price-big"></strong>
+            </div>
+            <!-- ✅ Book Now button now links to booking-details.html -->
+            <a class="book-now-btn" id="modal-book-btn" href="bookingPage_package.html">Book Now</a>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <footer>
+      <div class="footer-container">
+        <div class="footer-column">
+          <h4>TravelBooker</h4>
+          <p>Travel Booker.com</p>
+          <p>+94 87 345 2779</p>
+          <a href="mailto:info@travelbooker.com">info@travelbooker.com</a>
+        </div>
+        <div class="footer-column">
+          <h4>Services</h4>
+          <a href="travel_solutions.html">Travel Solutions</a>
+          <a href="corporateSolutions.html">Corporate Solutions</a>
+          <a href="agentSolutions.html">Agent Solutions</a>
+        </div>
+        <div class="footer-column">
+          <h4>Popular Destinations</h4>
+          <a href="#">Galle</a><a href="#">Ella</a>
+          <a href="#">Sigiriya</a><a href="#">Trincomalee</a>
+        </div>
+        <div class="footer-column">
+          <h4>Quick Links</h4>
+          <a href="index.html">Home</a>
+          <a href="contact_us.html">Contact Us</a>
+          <a href="login.html">Login</a>
+        </div>
+      </div>
+      <div class="footer-bottom">© 2025 <span>TravelBooker</span> · All Rights Reserved · Sri Lanka</div>
+    </footer>
+
+  </div>
+
+  <script>
+    const destData = {
+      "galle": {
+        name: "Galle – Coastal Heritage Escape",
+        location: "Galle, Unawatuna  •  Sri Lanka",
+        badge: "Beach & Culture",
+        emoji: "🌊",
+        price: "LKR 20,000 / person",
+        date: "12 Sep 2026",
+        days: "4 Days / 3 Nights",
+        heroColor: "linear-gradient(135deg, #0f6e56 0%, #185fa5 100%)",
+        includes: ["4-star hotels", "Breakfast", "Transfers", "Guided tours"],
+        activities: ["Galle Fort exploration", "Lighthouse visit", "Dutch Museum", "Beach relaxation", "Whale watching (seasonal)", "Sunset walk along ramparts"],
+        offers: ["Free sunset boat ride", "Complimentary seafood dinner"]
+      },
+      "ella": {
+        name: "Ella – Scenic Hill Country Escape",
+        location: "Ella, Sri Lanka",
+        badge: "Nature & Adventure",
+        emoji: "🌿",
+        price: "LKR 25,000 / person",
+        date: "10 Oct 2026",
+        days: "3 Days / 2 Nights",
+        heroColor: "linear-gradient(135deg, #3b6d11 0%, #0f6e56 100%)",
+        includes: ["4-star hotels", "Breakfast", "Transfers", "Guided tours"],
+        activities: ["Nine Arch Bridge visit", "Little Adam's Peak hike", "Ella Rock trekking", "Tea plantation tour", "Ravana Falls visit", "Train ride experience"],
+        offers: ["Free train ride experience", "Complimentary tea tasting"]
+      },
+      "sigiriya": {
+        name: "Sigiriya – The Lion's Peak Expedition",
+        location: "Sigiriya, Dambulla  •  Sri Lanka",
+        badge: "Ancient Wonders",
+        emoji: "🏯",
+        price: "LKR 50,000 / person",
+        date: "18 Sep 2026",
+        days: "4 Days / 3 Nights",
+        heroColor: "linear-gradient(135deg, #533ab7 0%, #1a3a5c 100%)",
+        includes: ["4-star hotels", "Breakfast", "Transfers", "Guided tours"],
+        activities: ["Sigiriya Rock climb", "Dambulla Cave Temple", "Village safari", "Elephant safari", "Sunset viewpoint"],
+        offers: ["Free village lunch experience", "Complimentary cultural show"]
+      },
+      "trinco": {
+        name: "Trincomalee – The Deep Blue Discovery",
+        location: "Trincomalee, Nilaveli  •  Sri Lanka",
+        badge: "Beach & Marine",
+        emoji: "🐠",
+        price: "LKR 55,000 / person",
+        date: "25 Sep 2026",
+        days: "4 Days / 3 Nights",
+        heroColor: "linear-gradient(135deg, #185fa5 0%, #0c447c 100%)",
+        includes: ["4-star beach hotels", "Breakfast", "Transfers", "Guided tours"],
+        activities: ["Pigeon Island snorkeling", "Nilaveli beach relaxation", "Koneswaram Temple visit", "Whale watching (seasonal)", "Boat rides"],
+        offers: ["Free snorkeling session", "Complimentary beach BBQ dinner"]
+      },
+      "arugam": {
+        name: "Arugam Bay – The Surf & Safari Trail",
+        location: "Arugam Bay, Yala  •  Sri Lanka",
+        badge: "Surf & Wildlife",
+        emoji: "🏄",
+        price: "LKR 45,000 / person",
+        date: "02 Oct 2026",
+        days: "4 Days / 3 Nights",
+        heroColor: "linear-gradient(135deg, #ba7517 0%, #993c1d 100%)",
+        includes: ["4-star hotels", "Breakfast", "Transfers", "Guided tours"],
+        activities: ["Surfing sessions", "Yala safari", "Lagoon tour", "Beach relaxation", "Sunset viewpoints"],
+        offers: ["Free surf lesson", "Complimentary safari upgrade"]
+      },
+      "jaffna": {
+        name: "Jaffna – The Northern Cultural Gem",
+        location: "Jaffna, Delft Island  •  Sri Lanka",
+        badge: "Culture & Heritage",
+        emoji: "🏛️",
+        price: "LKR 45,000 / person",
+        date: "10 Oct 2026",
+        days: "4 Days / 3 Nights",
+        heroColor: "linear-gradient(135deg, #993556 0%, #1a3a5c 100%)",
+        includes: ["4-star hotels", "Breakfast", "Transfers", "Guided tours"],
+        activities: ["Jaffna Fort exploration", "Nallur Temple visit", "Delft Island tour", "Local food experience", "Cultural landmarks visit"],
+        offers: ["Free local food tasting", "Complimentary island boat ride"]
+      }
+    };
+
+    function openModal(key) {
+      const d = destData[key];
+      if (!d) return;
+
+      document.getElementById('modal-hero').style.background = d.heroColor;
+      document.getElementById('modal-emoji').textContent = d.emoji;
+      document.getElementById('modal-badge').textContent = d.badge;
+      document.getElementById('modal-name').textContent = d.name;
+      document.getElementById('modal-location').textContent = d.location;
+      document.getElementById('modal-price').textContent = d.price;
+      document.getElementById('modal-price-big').textContent = d.price;
+      document.getElementById('modal-date').textContent = d.date;
+      document.getElementById('modal-days').textContent = d.days;
+
+      document.getElementById('modal-includes').innerHTML =
+        d.includes.map(i => `<div class="include-item"><span class="include-dot"></span>${i}</div>`).join('');
+
+      document.getElementById('modal-activities').innerHTML =
+        d.activities.map(a => `<span class="activity-tag">${a}</span>`).join('');
+
+      document.getElementById('modal-offers').innerHTML =
+        d.offers.map(o => `<div class="offer-item"><span class="offer-star">★</span>${o}</div>`).join('');
+
+      // ✅ Pass package name to booking page via URL query param
+      document.getElementById('modal-book-btn').href =
+        `bookingPage_package.html?package=${encodeURIComponent(d.name)}`;
+
+      document.getElementById('destModal').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('destModal').classList.remove('active');
+    }
+
+    document.getElementById('destModal').addEventListener('click', function (e) {
+      if (e.target === this) closeModal();
+    });
+
+
+    //login javascriptssss
+    document.addEventListener("DOMContentLoaded", function () {
+      // 1. Check browser storage for login data
+      const isLoggedIn = localStorage.getItem('isLoggedIn');
+      const userEmail = localStorage.getItem('userEmail');
+      const userRole = localStorage.getItem('userRole');
+
+      // 2. If logged in, modify the UI
+      if (isLoggedIn === 'true' && userEmail) {
+        const authZone = document.getElementById('auth-zone');
+        const solutionsNav = document.querySelector('.nav-solutions');
+
+        // --- ROLE-BASED SOLUTION FILTERING ---
+        if (solutionsNav) {
+          // First, hide ALL solution tabs
+          const allTabs = document.querySelectorAll('.nav-solutions li');
+          allTabs.forEach(tab => tab.style.display = 'none');
+
+          // Now, show ONLY the one relevant to the logged-in user
+          if (userRole === 'traveler') {
+            document.querySelector('.sol-travel').style.display = 'block';
+          }
+          else if (userRole === 'corporate') {
+            document.querySelector('.sol-corp').style.display = 'block';
+          }
+          else if (userRole === 'agent') {
+            document.querySelector('.sol-agent').style.display = 'block';
+          }
+        }
+
+        // Determine dashboard link for the "Hi, Name" button
+        let dashLink = "travellerProfile.html";
+        if (userRole === 'corporate') dashLink = "corporateProfile.html";
+        if (userRole === 'agent') dashLink = "agentProfile.html";
+
+        const userName = userEmail.split('@')[0];
+
+        // Replace Login/Signup with Profile Link + Logout Button
+        authZone.innerHTML = `
+        <li style="list-style:none; display:flex; align-items:center; gap:15px;">
+            <a href="${dashLink}" style="color: var(--teal); font-weight:600; text-decoration:none;">
+               <i class="fas fa-user-circle"></i> Hi, ${userName}
+            </a>
+            <a href="javascript:void(0)" onclick="handleLogout()" 
+               style="color: #ff4d4d; font-size: 11px; border: 1px solid #ff4d4d; padding: 2px 6px; border-radius: 4px; text-decoration:none;">
+               Logout
+            </a>
+        </li>
+    `;
+      }
+
+    });
+
+    // 3. The Logout Function
+    function handleLogout() {
+      if (confirm("Are you sure you want to logout?")) {
+        localStorage.clear(); // Clears email, role, and login status
+        window.location.href = "index.html"; // Redirect to public home
+      }
+    }
+  </script>
+</body>
+
+</html>

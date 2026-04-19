@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>About Us – TravelBooker</title>
+  <link rel="stylesheet" href="Global.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet"/>
+  <style>
+
+    body {
+      margin: 0;
+      font-family: var(--font-body);
+      background: var(--light-bg);
+      color: var(--text-dark);
+    }
+
+    /* ── HERO ── */
+    .about-hero {
+      background: var(--navy);
+      padding: 5rem 2.5rem 4rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .about-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 60% 50%, rgba(29,196,152,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .about-hero .hero-tag {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 14px;
+      display: block;
+    }
+
+    .about-hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(32px, 5vw, 56px);
+      color: white;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+
+    .about-hero h1 span { color: var(--teal); font-style: italic; }
+
+    .about-hero p {
+      font-size: 16px;
+      color: rgba(255,255,255,0.65);
+      max-width: 520px;
+      margin: 0 auto;
+      line-height: 1.75;
+    }
+
+    .scroll-hint {
+      margin-top: 2.5rem;
+      color: rgba(255,255,255,0.35);
+      font-size: 20px;
+      animation: bounce 2s infinite;
+      display: block;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(8px); }
+    }
+
+    /* ── SHARED ── */
+    .section-label {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 10px;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 32px;
+      color: var(--navy);
+      line-height: 1.25;
+      margin-bottom: 20px;
+    }
+
+    /* ── OUR STORY ── */
+    .story-section {
+      padding: 5rem 2.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .story-text p {
+      font-size: 15px;
+      color: var(--text-mid);
+      line-height: 1.85;
+      margin-bottom: 16px;
+    }
+
+    .story-text strong { color: var(--navy); }
+
+    .stats-row {
+      display: flex;
+      gap: 36px;
+      margin-top: 32px;
+      padding-top: 28px;
+      border-top: 1px solid var(--border);
+    }
+
+    .stat h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 32px;
+      color: var(--teal);
+      line-height: 1;
+    }
+
+    .stat p {
+      font-size: 13px;
+      color: var(--text-light);
+      margin-top: 4px;
+    }
+
+    /* Story Visual Cards */
+    .story-visual {
+      position: relative;
+      height: 320px;
+    }
+
+    .visual-card {
+      position: absolute;
+      background: white;
+      border-radius: 14px;
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: var(--shadow-md);
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--navy);
+      white-space: nowrap;
+      border-left: 4px solid var(--teal);
+      transition: transform 0.3s;
+    }
+
+    .visual-card:hover { transform: scale(1.04); }
+    .visual-card .card-emoji { font-size: 26px; }
+    .visual-card.mid-card { border-left-color: #e8734a; }
+
+    .top-card { top: 0;    left: 10px; }
+    .mid-card { top: 115px; left: 50px; }
+    .bot-card { top: 230px; left: 10px; }
+
+    /* ── VALUES ── */
+    .values-section {
+      background: white;
+      padding: 5rem 2.5rem;
+    }
+
+    .values-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .values-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    .value-card {
+      background: var(--light-bg);
+      border-radius: var(--radius-lg);
+      padding: 32px 22px;
+      text-align: center;
+      border-top: 3px solid var(--teal);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .value-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .value-icon { font-size: 36px; margin-bottom: 14px; }
+
+    .value-card h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 17px;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+
+    .value-card p {
+      font-size: 13px;
+      color: var(--text-mid);
+      line-height: 1.65;
+    }
+
+    /* ── TEAM ── */
+    .team-section {
+      padding: 5rem 2.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .team-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .team-card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 2rem 1.5rem;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .team-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .team-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: var(--navy);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      margin: 0 auto 1rem;
+    }
+
+    .team-card h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 17px;
+      color: var(--navy);
+      margin-bottom: 4px;
+    }
+
+    .team-card .role {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--teal);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+
+    .team-card p {
+      font-size: 13px;
+      color: var(--text-mid);
+      line-height: 1.6;
+    }
+
+    /* ── CTA BANNER ── */
+    .cta-section {
+      background: var(--navy);
+      padding: 4rem 2.5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 50%, rgba(29,196,152,0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .cta-section h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 30px;
+      color: white;
+      margin-bottom: 12px;
+    }
+
+    .cta-section p {
+      font-size: 15px;
+      color: rgba(255,255,255,0.65);
+      margin-bottom: 28px;
+    }
+
+    .cta-btn {
+      display: inline-block;
+      background: var(--teal);
+      color: white;
+      padding: 13px 34px;
+      border-radius: var(--radius-md);
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .cta-btn:hover {
+      background: var(--teal-dark);
+      transform: translateY(-2px);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .story-section { grid-template-columns: 1fr; }
+      .story-visual  { display: none; }
+      .values-grid   { grid-template-columns: repeat(2, 1fr); }
+      .team-grid     { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 560px) {
+      .values-grid { grid-template-columns: 1fr; }
+      .team-grid   { grid-template-columns: 1fr; }
+      .stats-row   { gap: 20px; }
+    }
+
+  </style>
+</head>
+<body>
+
+<!-- ── NAVBAR ── -->
+<nav class="navbar">
+    <div class="nav-top">
+      <a class="logo" href="index.html">
+        <img src="Travel Booker logo design.png" alt="logo" class="logo-imgg" />
+        <span>TravelBooker</span>
+      </a> <br><br><br>
+      <div class="nav-right"> <br>
+        <ul class="nav-menu"> <br><br>
+          <li><a href="index.html" class="active">Home</a></li> <br><br>
+          <li><a href="about_us.html">About Us</a></li>
+          <li><a href="contact_us.html">Contact Us</a></li>
+
+          <span id="auth-zone" style="display: flex; gap: 10px; align-items: center; margin-left: 15px;">
+            <li><a href="login.html" class="sign-button">Login</a></li>
+            <li><a href="profileSelect_signup.html" class="sign-button">Sign Up</a></li>
+          </span>
+
+        </ul>
+        <ul class="nav-solutions">
+          <li class="sol-travel"><a href="travel_solutions.html" class="solutions-button">Travel Solutions</a></li>
+          <li class="sol-corp"><a href="corporateSolutions.html" class="solutions-button">Corporate Solutions</a></li>
+          <li class="sol-agent"><a href="agentSolutions.html" class="solutions-button">Agent Solutions</a></li>
+        </ul>
+      </div>
+    </div><br><br>
+  </nav> <br> <br>
+
+<div class="page-body">
+
+  <!-- ── HERO ── -->
+  <div class="about-hero">
+    <span class="hero-tag">✦ Who We Are</span>
+    <h1>About <span>TravelBooker</span></h1>
+    <p>Redefining how travel experiences are discovered, managed, and remembered.</p>
+    <span class="scroll-hint">↓</span>
+  </div>
+
+  <!-- ── OUR STORY ── -->
+  <div class="story-section">
+    <div class="story-text">
+      <span class="section-label">Our Story</span>
+      <h2 class="section-title">Built for Modern Travellers</h2>
+      <p>TravelBooker is an innovative travel booking platform built to redefine how travel experiences are discovered and managed. Developed as a prototype for <strong>Coastal Tours</strong>, it addresses the growing demand for a seamless, digital-first booking experience.</p>
+      <p>By supporting both <strong>B2C and B2B</strong> interactions, TravelBooker connects travelers and travel partners through a scalable and intuitive web application. Our vision is to deliver a flexible and efficient platform that evolves with the needs of modern travelers while empowering businesses to grow in a competitive digital landscape.</p>
+      <div class="stats-row">
+        <div class="stat">
+          <h3>200+</h3>
+          <p>Destinations</p>
+        </div>
+        <div class="stat">
+          <h3>5K+</h3>
+          <p>Happy Travellers</p>
+        </div>
+        <div class="stat">
+          <h3>24/7</h3>
+          <p>Support</p>
+        </div>
+      </div>
+    </div>
+    <div class="story-visual">
+      <div class="visual-card top-card">
+        <span class="card-emoji">🌏</span>
+        <p>Global Reach</p>
+      </div>
+      <div class="visual-card mid-card">
+        <span class="card-emoji">✈️</span>
+        <p>Seamless Booking</p>
+      </div>
+      <div class="visual-card bot-card">
+        <span class="card-emoji">🤝</span>
+        <p>B2B &amp; B2C Ready</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── VALUES ── -->
+  <div class="values-section">
+    <div class="values-inner">
+      <div class="values-header">
+        <span class="section-label">What Drives Us</span>
+        <h2 class="section-title">Our Core Values</h2>
+      </div>
+      <div class="values-grid">
+        <div class="value-card">
+          <div class="value-icon">🌟</div>
+          <h4>Excellence</h4>
+          <p>We handpick every experience to ensure quality you can trust.</p>
+        </div>
+        <div class="value-card">
+          <div class="value-icon">🔒</div>
+          <h4>Trust &amp; Safety</h4>
+          <p>Secure bookings and transparent pricing — always.</p>
+        </div>
+        <div class="value-card">
+          <div class="value-icon">💡</div>
+          <h4>Innovation</h4>
+          <p>Constantly evolving our platform to serve you better.</p>
+        </div>
+        <div class="value-card">
+          <div class="value-icon">🌱</div>
+          <h4>Sustainability</h4>
+          <p>Promoting responsible tourism that respects nature and culture.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+
+  <!-- ── CTA ── -->
+  <div class="cta-section">
+    <h2>Ready to Start Your Journey?</h2>
+    <p>Explore our handpicked destinations across Sri Lanka and beyond.</p>
+    <a href="travel_solutions.html" class="cta-btn">Explore Packages</a>
+  </div>
+  <br><br><br>
+
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    <div class="footer-container">
+      <div class="footer-column">
+        <h4>TravelBooker</h4>
+        <p>Travel Booker.com</p>
+        <p>+94 87 345 2779</p>
+        <a href="mailto:info@travelbooker.com">info@travelbooker.com</a>
+      </div>
+      <div class="footer-column">
+        <h4>Services</h4>
+        <a href="travel_solutions.html">Travel Solutions</a>
+        <a href="corporateSolutions.html">Corporate Solutions</a>
+        <a href="agentSolutions.html">Agent Solutions</a>
+      </div>
+      <div class="footer-column">
+        <h4>Popular Destinations</h4>
+        <a href="#">Galle</a>
+        <a href="#">Ella</a>
+        <a href="#">Sigiriya</a>
+        <a href="#">Trincomalee</a>
+      </div>
+      <div class="footer-column">
+        <h4>Quick Links</h4>
+        <a href="index.html">Home</a>
+        <a href="contact_us.html">Contact Us</a>
+        <a href="login.html">Login</a>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2025 <span>TravelBooker</span> · All Rights Reserved · Sri Lanka</div>
+  </footer>
+
+</div>
+
+  <script>
+    //login javascriptssss
+    document.addEventListener("DOMContentLoaded", function () {
+      // 1. Check browser storage for login data
+      const isLoggedIn = localStorage.getItem('isLoggedIn');
+      const userEmail = localStorage.getItem('userEmail');
+      const userRole = localStorage.getItem('userRole');
+
+      // 2. If logged in, modify the UI
+      if (isLoggedIn === 'true' && userEmail) {
+        const authZone = document.getElementById('auth-zone');
+        const solutionsNav = document.querySelector('.nav-solutions');
+
+        // --- ROLE-BASED SOLUTION FILTERING ---
+        if (solutionsNav) {
+          // First, hide ALL solution tabs
+          const allTabs = document.querySelectorAll('.nav-solutions li');
+          allTabs.forEach(tab => tab.style.display = 'none');
+
+          // Now, show ONLY the one relevant to the logged-in user
+          if (userRole === 'traveler') {
+            document.querySelector('.sol-travel').style.display = 'block';
+          }
+          else if (userRole === 'corporate') {
+            document.querySelector('.sol-corp').style.display = 'block';
+          }
+          else if (userRole === 'agent') {
+            document.querySelector('.sol-agent').style.display = 'block';
+          }
+        }
+
+        // Determine dashboard link for the "Hi, Name" button
+        let dashLink = "travellerProfile.html";
+        if (userRole === 'corporate') dashLink = "corporateProfile.html";
+        if (userRole === 'agent') dashLink = "agentProfile.html";
+
+        const userName = userEmail.split('@')[0];
+
+        // Replace Login/Signup with Profile Link + Logout Button
+        authZone.innerHTML = `
+        <li style="list-style:none; display:flex; align-items:center; gap:15px;">
+            <a href="${dashLink}" style="color: var(--teal); font-weight:600; text-decoration:none;">
+               <i class="fas fa-user-circle"></i> Hi, ${userName}
+            </a>
+            <a href="javascript:void(0)" onclick="handleLogout()" 
+               style="color: #ff4d4d; font-size: 11px; border: 1px solid #ff4d4d; padding: 2px 6px; border-radius: 4px; text-decoration:none;">
+               Logout
+            </a>
+        </li>
+    `;
+      }
+
+    });
+
+    // 3. The Logout Function
+    function handleLogout() {
+      if (confirm("Are you sure you want to logout?")) {
+        localStorage.clear(); // Clears email, role, and login status
+        window.location.href = "index.html"; // Redirect to public home
+      }
+    }
+  </script>
+</body>
+</html>

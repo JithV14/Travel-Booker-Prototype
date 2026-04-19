@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Choose Profile – TravelBooker</title>
+  <link rel="stylesheet" href="Global.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+  <style>
+    body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--light-bg);
+  font-family: var(--font-body);
+  display: flex;
+  flex-direction: column;
+}
+
+.page-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  padding-top: 100px;  /* clears the navbar */
+}
+
+    .back-link {
+      position: fixed;
+      top: 2rem;
+      left: 2rem;
+      color: var(--navy);
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s;
+    }
+
+    .back-link:hover { color: var(--teal); }
+
+    .profile-box {
+      background: white;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      padding: 4rem 4.5rem;
+      width: 600px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2.5rem;
+      box-shadow: var(--shadow-md);
+    }
+
+    .profile-box h2 {
+      font-family: var(--font-head);
+      font-size: 22px;
+      font-weight: 700;
+      text-align: center;
+      color: var(--navy);
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .profile-box p {
+      font-size: 14px;
+      color: var(--text-mid);
+      text-align: center;
+      margin: -1.5rem 0 0;
+    }
+
+    .profile-buttons {
+      display: flex;
+      gap: 1.2rem;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .profile-btn {
+      flex: 1;
+      padding: 14px 10px;
+      border-radius: 10px;
+      border: none;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
+      letter-spacing: 0.3px;
+    }
+
+    .profile-btn:hover {
+      opacity: 0.9;
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .profile-btn:active { transform: scale(0.97); }
+
+    .profile-btn.traveler  {
+      background: #e8734a;
+      color: white;
+    }
+
+    .profile-btn.agent {
+      background: white;
+      color: var(--navy);
+      border: 1.5px solid var(--border);
+    }
+
+    .profile-btn.agent:hover {
+      border-color: var(--teal);
+      color: var(--teal);
+    }
+
+    .profile-btn.corporate {
+      background: var(--navy);
+      color: white;
+    }
+
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .login-note {
+      font-size: 13px;
+      color: var(--text-light);
+    }
+
+    .login-note a {
+      color: var(--teal);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .login-note a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+    <nav class="navbar">
+  <div class="nav-top">
+    <a class="logo" href="index.html">
+      <img src="Travel Booker logo design.png" alt="logo" class="logo-imgg"/>
+      <span>TravelBooker</span>
+    </a> <br><br><br>
+    <div class="nav-right"> <br>
+      <ul class="nav-menu"> <br><br>
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="about_us.html">About Us</a></li>
+        <li><a href="contact_us.html">Contact Us</a></li>
+        <li><a href="login.html" class="sign-button">Login</a></li>
+        <li><a href="profileSelect_signup.html" class="sign-button">Sign up</a></li>
+      </ul>
+      <ul class="nav-solutions">
+        <li><a href="travel_solutions.html" class="solutions-button active">Travel Solutions</a></li>
+        <li><a href="corporateSolutions.html" class="solutions-button">Corporate Solutions</a></li>
+        <li><a href="agentSolutions.html" class="solutions-button">Agent Solutions</a></li>
+      </ul>
+    </div>
+  </div> <br><br>
+</nav> <br><br>
+
+  <div class="page-body">
+  <a href="javascript:history.back()" class="back-link">← Back</a>
+
+  <div class="profile-box">
+    <h2>Choose A Profile To Create or<br>Log in To an Account</h2>
+    <p>Select the account type that best describes you</p>
+
+    <div class="profile-buttons">
+      <a href="signup.html" class="profile-btn traveler">Traveler</a>
+      <a href="signup.html"    class="profile-btn agent">Agent</a>
+      <a href="signup.html" class="profile-btn corporate">Corporate</a>
+    </div>
+
+    <div class="divider"></div>
+
+    <p class="login-note">Already have an account? <a href="login.html">Log in here</a></p>
+  </div>
+</div>
+
+  <footer>
+    <div class="footer-container">
+      <div class="footer-column">
+        <h4>TravelBooker</h4>
+        <p>Travel Booker.com</p>
+        <p>+94 87 345 2779</p>
+        <a href="mailto:info@travelbooker.com">info@travelbooker.com</a>
+      </div>
+      <div class="footer-column">
+        <h4>Services</h4>
+        <a href="travel_solutions.html">Travel Solutions</a>
+        <a href="corporateSolutions.html">Corporate Solutions</a>
+        <a href="agentSolutions.html">Agent Solutions</a>
+      </div>
+      <div class="footer-column">
+        <h4>Popular Destinations</h4>
+        <a href="#">Galle</a><a href="#">Ella</a>
+        <a href="#">Sigiriya</a><a href="#">Trincomalee</a>
+      </div>
+      <div class="footer-column">
+        <h4>Quick Links</h4>
+        <a href="index.html">Home</a>
+        <a href="contact_us.html">Contact Us</a>
+        <a href="login.html">Login</a>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2025 <span>TravelBooker</span> · All Rights Reserved · Sri Lanka</div>
+  </footer>
+</div>
+
+</body>
+</html>

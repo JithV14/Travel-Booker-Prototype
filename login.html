@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login – TravelBooker</title>
+  <link rel="stylesheet" href="Global.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <style>
+    .login-page {
+      min-height: calc(100vh - 95px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      background: var(--navy);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-page::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 30% 50%, rgba(29, 196, 152, 0.12) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .login-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      max-width: 860px;
+      width: 100%;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+      position: relative;
+      z-index: 1;
+    }
+
+    @media(max-width:640px) {
+      .login-container {
+        grid-template-columns: 1fr;
+      }
+
+      .login-left {
+        display: none;
+      }
+    }
+
+    /* Left panel */
+    .login-left {
+      background: linear-gradient(160deg, #1a4030 0%, #1e3a5f 100%);
+      padding: 3rem 2.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .login-left .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 2.5rem;
+    }
+
+    .login-left .brand img {
+      height: 40px;
+      border-radius: 6px;
+      background: white;
+      padding: 2px;
+    }
+
+    .login-left .brand span {
+      font-family: var(--font-head);
+      font-size: 20px;
+      color: white;
+      font-weight: 700;
+    }
+
+    .login-left h2 {
+      font-family: var(--font-head);
+      font-size: 24px;
+      color: white;
+      margin-bottom: 1rem;
+      line-height: 1.3;
+    }
+
+    .login-left p {
+      font-size: 14px;
+      color: rgba(255, 255, 255, .6);
+      line-height: 1.7;
+      margin-bottom: 2rem;
+    }
+
+    .login-feature {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: .75rem;
+      font-size: 13px;
+      color: rgba(255, 255, 255, .75);
+    }
+
+    .login-feature i {
+      color: var(--teal);
+      width: 16px;
+    }
+
+    /* Right panel */
+    .login-right {
+      background: white;
+      padding: 3rem 2.5rem;
+    }
+
+    .login-right h1 {
+      font-family: var(--font-head);
+      font-size: 24px;
+      color: var(--navy);
+      margin-bottom: .4rem;
+    }
+
+    .login-right .login-sub {
+      font-size: 13px;
+      color: var(--text-mid);
+      margin-bottom: 13px;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      color: var(--text-mid);
+      text-decoration: none;
+      margin-bottom: 10px;
+      transition: color .2s;
+    }
+
+    .back-link:hover {
+      color: var(--teal);
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-mid);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      margin-bottom: .4rem;
+    }
+
+    .form-group .input-wrap {
+      position: relative;
+    }
+
+    .form-group .input-wrap i {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-light);
+      font-size: 14px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 11px 14px 11px 38px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-md);
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--text-dark);
+      background: var(--light-bg);
+      outline: none;
+      transition: border-color .2s;
+    }
+
+    .form-input:focus {
+      border-color: var(--teal);
+      background: white;
+    }
+
+    .forgot {
+      display: block;
+      text-align: right;
+      font-size: 12px;
+      color: var(--teal);
+      text-decoration: none;
+      margin-top: .4rem;
+    }
+
+    .forgot:hover {
+      text-decoration: underline;
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 13px;
+      background: var(--navy);
+      color: white;
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: var(--font-body);
+      transition: background .2s;
+      margin-top: .5rem;
+      margin-bottom: 1rem;
+    }
+
+    .login-btn:hover {
+      background: var(--teal);
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 1rem;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .divider span {
+      font-size: 12px;
+      color: var(--text-light);
+    }
+
+    .google-btn {
+      width: 100%;
+      padding: 11px;
+      background: white;
+      color: var(--text-dark);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: var(--font-body);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: border-color .2s, box-shadow .2s;
+      margin-bottom: 1.5rem;
+    }
+
+    .google-btn img {
+      height: 18px;
+    }
+
+    .google-btn:hover {
+      border-color: var(--teal);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, .1);
+    }
+
+    .signup-row {
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-mid);
+    }
+
+    .signup-row a {
+      color: var(--teal);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .signup-row a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="navbar">
+    <div class="nav-top">
+      <a class="logo" href="index.html">
+        <img src="Travel Booker logo design.png" alt="logo" class="logo-imgg" />
+        <span>TravelBooker</span>
+      </a> <br><br><br>
+      <div class="nav-right"> <br>
+        <ul class="nav-menu"> <br><br>
+          <li><a href="index.html" class="active">Home</a></li> <br><br>
+          <li><a href="about_us.html">About Us</a></li>
+          <li><a href="contact_us.html">Contact Us</a></li>
+
+          <span id="auth-zone" style="display: flex; gap: 10px; align-items: center; margin-left: 15px;">
+            <li><a href="login.html" class="sign-button">Login</a></li>
+            <li><a href="profileSelect_signup.html" class="sign-button">Sign Up</a></li>
+          </span>
+
+        </ul>
+        <ul class="nav-solutions">
+          <li class="sol-travel"><a href="travel_solutions.html" class="solutions-button">Travel Solutions</a></li>
+          <li class="sol-corp"><a href="corporateSolutions.html" class="solutions-button">Corporate Solutions</a></li>
+          <li class="sol-agent"><a href="agentSolutions.html" class="solutions-button">Agent Solutions</a></li>
+        </ul>
+      </div>
+    </div><br><br>
+  </nav> <br> <br>
+
+  <div class="page-body">
+    <div class="login-page">
+      <div class="login-container">
+
+        <!-- Left -->
+        <div class="login-left">
+          <div class="brand">
+            <img src="Travel Booker logo design.png" alt="logo" />
+            <span>TravelBooker</span>
+          </div>
+          <h2>Your Perfect Sri Lanka Journey Starts Here</h2>
+          <p>Log in to access your bookings, manage itineraries, and discover exclusive travel deals.</p>
+          <div class="login-feature"><i class="fas fa-check-circle"></i> Access your bookings anytime</div>
+          <div class="login-feature"><i class="fas fa-check-circle"></i> Exclusive member deals</div>
+          <div class="login-feature"><i class="fas fa-check-circle"></i> 24/7 dedicated support</div>
+          <div class="login-feature"><i class="fas fa-check-circle"></i> Secure &amp; trusted platform</div>
+        </div>
+
+        <!-- Right -->
+        <div class="login-right">
+          <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Home</a>
+          <h1>Welcome Back</h1>
+          <p class="login-sub">Sign in to your TravelBooker account</p>
+
+          <form onsubmit="handleLocalLogin(event)">
+
+            <div class="input-wrap" style="padding-bottom: 10px;">
+              <i class="fas fa-user-tag" style="padding-right: 10px;"></i>
+              <select name="user_type" class="form-input" style="background: #f0f2f5; color: #1e3a5f;  width: 90%;"
+                required>
+                <option value="traveler" style="color: black;">Direct Traveler</option>
+                <option value="corporate" style="color: black;">Corporate Partner</option>
+                <option value="agent" style="color: black;">Travel Agent</option>
+              </select> <br>
+            </div>
+
+            <div class="form-group">
+              <label>Email Address</label>
+              <div class="input-wrap">
+                <i class="fas fa-envelope"></i>
+                <input type="email" class="form-input" placeholder="you@email.com" required />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Password</label>
+              <div class="input-wrap">
+                <i class="fas fa-lock"></i>
+                <input type="password" class="form-input" placeholder="Enter your password" required />
+              </div>
+              <a href="forgot_password.html" class="forgot">Forgot Password?</a>
+            </div>
+            <button type="submit" class="login-btn">Login</button>
+          </form>
+
+          <div class="divider"><span>or continue with</span></div>
+
+          <button class="google-btn">
+            <img src="google.jpg" alt="Google" />
+            Sign in with Google
+          </button>
+
+          <div class="signup-row">Don't have an account? <a href="profileSelect_signup.html">Sign Up</a></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+<script>
+function handleLocalLogin(event) {
+    event.preventDefault(); // Prevents the page from refreshing
+    
+    // Get the selected user type
+    const userType = document.querySelector('select[name="user_type"]').value;
+    const email = document.querySelector('input[type="email"]').value;
+
+    // Save the user data to "localStorage" (This is like a browser-only Session)
+    localStorage.setItem('isLoggedIn', 'true');
+    localStorage.setItem('userEmail', email);
+    localStorage.setItem('userRole', userType);
+
+    // Redirect based on the dropdown choice
+    if (userType === 'traveler') {
+        window.location.href = "travellerProfile.html";
+    } else if (userType === 'corporate') {
+        window.location.href = "corporateProfile.html";
+    } else if (userType === 'agent') {
+        window.location.href = "agentProfile.html";
+    }
+}
+</script>
+
+</body>
+
+</html>

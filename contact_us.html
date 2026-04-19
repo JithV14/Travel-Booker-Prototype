@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Contact Us – TravelBooker</title>
+<link rel="stylesheet" href="Global.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+<style>
+.contact-hero { background: var(--navy); padding: 3rem 2.5rem; text-align: center; }
+.contact-hero h1 { font-family: var(--font-head); font-size: 30px; color: white; margin-bottom: .5rem; }
+.contact-hero p { font-size: 15px; color: rgba(255,255,255,.6); }
+
+.contact-section { max-width: 1000px; margin: 3rem auto; padding: 0 1.5rem; }
+.contact-grid { display: grid; grid-template-columns: 1fr 1.6fr; gap: 2rem; }
+@media(max-width:700px){ .contact-grid { grid-template-columns: 1fr; } }
+
+/* Info Card */
+.info-card {
+  background: var(--navy); border-radius: var(--radius-lg);
+  padding: 2rem; color: white; display: flex; flex-direction: column; gap: 1.5rem;
+}
+.info-card h3 { font-family: var(--font-head); font-size: 18px; margin-bottom: .5rem; }
+.info-row { display: flex; align-items: flex-start; gap: 12px; }
+.info-icon {
+  width: 38px; height: 38px; background: rgba(29,196,152,.15);
+  border-radius: 8px; display: flex; align-items: center; justify-content: center;
+  color: var(--teal); font-size: 16px; flex-shrink: 0;
+}
+.info-row-text p { font-size: 13px; color: rgba(255,255,255,.55); margin-bottom: 2px; }
+.info-row-text strong { font-size: 14px; color: white; }
+.social-row { display: flex; gap: 10px; margin-top: 0.5rem; }
+.soc-btn {
+  width: 36px; height: 36px; background: rgba(255,255,255,.1);
+  border-radius: 8px; display: flex; align-items: center; justify-content: center;
+  color: white; text-decoration: none; font-size: 15px; transition: background .2s;
+}
+.soc-btn:hover { background: var(--teal); }
+
+/* Form Card */
+.form-card {
+  background: white; border-radius: var(--radius-lg);
+  padding: 2rem; box-shadow: var(--shadow-sm); border: 1px solid var(--border);
+}
+.form-card h3 { font-family: var(--font-head); font-size: 18px; color: var(--navy); margin-bottom: 1.25rem; }
+.form-group { margin-bottom: 1rem; }
+.form-group label { display: block; font-size: 12px; font-weight: 600; color: var(--text-mid); text-transform: uppercase; letter-spacing: .05em; margin-bottom: .4rem; }
+.form-input, .form-textarea {
+  width: 100%; padding: 11px 14px;
+  border: 1.5px solid var(--border); border-radius: var(--radius-md);
+  font-family: var(--font-body); font-size: 14px; color: var(--text-dark);
+  background: var(--light-bg); outline: none; transition: border-color .2s;
+}
+.form-input:focus, .form-textarea:focus { border-color: var(--teal); background: white; }
+.form-textarea { resize: vertical; min-height: 110px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+@media(max-width:500px){ .form-row { grid-template-columns: 1fr; } }
+.submit-btn {
+  width: 100%; padding: 13px;
+  background: var(--navy); color: white; border: none;
+  border-radius: var(--radius-md); font-size: 15px; font-weight: 600;
+  cursor: pointer; font-family: var(--font-body); transition: background .2s;
+  margin-top: .5rem;
+}
+.submit-btn:hover { background: var(--teal); }
+
+/* Map placeholder */
+.map-placeholder {
+  background: var(--navy); border-radius: var(--radius-lg);
+  height: 200px; display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,.5); font-size: 14px; margin-top: 2rem;
+  border: 2px dashed rgba(255,255,255,.15);
+}
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-top">
+      <a class="logo" href="Home.html">
+        <img src="Travel Booker logo design.png" alt="logo" class="logo-imgg" />
+        <span>TravelBooker</span>
+      </a> <br><br><br>
+      <div class="nav-right"> <br>
+        <ul class="nav-menu"> <br><br>
+          <li><a href="index.html" class="active">Home</a></li> <br><br>
+          <li><a href="about_us.html">About Us</a></li>
+          <li><a href="contact_us.html">Contact Us</a></li>
+
+          <span id="auth-zone" style="display: flex; gap: 10px; align-items: center; margin-left: 15px;">
+            <li><a href="login.html" class="sign-button">Login</a></li>
+            <li><a href="profileSelect_signup.html" class="sign-button">Sign Up</a></li>
+          </span>
+
+        </ul>
+        <ul class="nav-solutions">
+          <li class="sol-travel"><a href="travel_solutions.html" class="solutions-button">Travel Solutions</a></li>
+          <li class="sol-corp"><a href="corporateSolutions.html" class="solutions-button">Corporate Solutions</a></li>
+          <li class="sol-agent"><a href="agentSolutions.html" class="solutions-button">Agent Solutions</a></li>
+        </ul>
+      </div>
+    </div><br><br>
+  </nav> <br> <br>
+
+<div class="page-body">
+
+  <div class="contact-hero">
+    <h1>Get In Touch</h1>
+    <p>We'd love to hear from you — our team is ready to help plan your perfect Sri Lanka journey.</p>
+  </div>
+
+  <div class="contact-section">
+    <div class="contact-grid">
+
+      <!-- Info -->
+      <div class="info-card">
+        <h3>Contact Information</h3>
+        <div class="info-row">
+          <div class="info-icon"><i class="fas fa-phone"></i></div>
+          <div class="info-row-text"><p>Phone</p><strong>+94 87 345 2779</strong></div>
+        </div>
+        <div class="info-row">
+          <div class="info-icon"><i class="fas fa-fax"></i></div>
+          <div class="info-row-text"><p>Fax</p><strong>+94 20 938 4723</strong></div>
+        </div>
+        <div class="info-row">
+          <div class="info-icon"><i class="fas fa-envelope"></i></div>
+          <div class="info-row-text"><p>Email</p><strong>info@travelbooker.com</strong></div>
+        </div>
+        <div class="info-row">
+          <div class="info-icon"><i class="fas fa-globe"></i></div>
+          <div class="info-row-text"><p>Website</p><strong>www.TravelBooker.com</strong></div>
+        </div>
+        <div>
+          <p style="font-size:12px;color:rgba(255,255,255,.45);margin-bottom:.6rem;">Follow Us</p>
+          <div class="social-row">
+            <a href="#" class="soc-btn"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="soc-btn"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="soc-btn"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="soc-btn"><i class="fab fa-linkedin-in"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <div class="form-card">
+        <h3>Send us a Message</h3>
+        <form>
+          <div class="form-row">
+            <div class="form-group"><label>Full Name</label><input type="text" class="form-input" placeholder="Your full name"/></div>
+            <div class="form-group"><label>Email Address</label><input type="email" class="form-input" placeholder="you@email.com"/></div>
+          </div>
+          <div class="form-group"><label>Contact Number</label><input type="tel" class="form-input" placeholder="+94 XX XXX XXXX"/></div>
+          <div class="form-group"><label>Subject</label><input type="text" class="form-input" placeholder="How can we help you?"/></div>
+          <div class="form-group"><label>Notes / Message</label><textarea class="form-textarea" placeholder="Tell us about your travel plans or enquiry…"></textarea></div>
+          <button type="submit" class="submit-btn">Send Message</button>
+        </form>
+      </div>
+
+    </div>
+
+    <div class="map-placeholder">
+      <i class="fas fa-map-marker-alt" style="margin-right:8px;color:var(--teal)"></i> TravelBooker Head Office · Colombo, Sri Lanka
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-container">
+      <div class="footer-column"><h4>TravelBooker</h4><p>Travel Booker.com</p><p>+94 87 345 2779</p><a href="mailto:info@travelbooker.com">info@travelbooker.com</a></div>
+      <div class="footer-column"><h4>Services</h4><a href="travel_solutions.html">Travel Solutions</a><a href="corporateSolutions.html">Corporate Solutions</a><a href="agentSolutions.html">Agent Solutions</a></div>
+      <div class="footer-column"><h4>Popular Destinations</h4><a href="travelPackage.htmls">Galle</a><a href="travelPackage.html">Ella</a><a href="travelPackage.html">Sigiriya</a></div>
+      <div class="footer-column"><h4>Quick Links</h4><a href="index.html">Home</a><a href="contact_us.html">Contact Us</a><a href="login.html">Login</a></div>
+    </div>
+    <div class="footer-bottom">© 2025 <span>TravelBooker</span> · All Rights Reserved · Sri Lanka</div>
+  </footer>
+
+</div>
+
+<script>
+  //login javascriptssss
+    document.addEventListener("DOMContentLoaded", function () {
+      // 1. Check browser storage for login data
+      const isLoggedIn = localStorage.getItem('isLoggedIn');
+      const userEmail = localStorage.getItem('userEmail');
+      const userRole = localStorage.getItem('userRole');
+
+      // 2. If logged in, modify the UI
+      if (isLoggedIn === 'true' && userEmail) {
+        const authZone = document.getElementById('auth-zone');
+        const solutionsNav = document.querySelector('.nav-solutions');
+
+        // --- ROLE-BASED SOLUTION FILTERING ---
+        if (solutionsNav) {
+          // First, hide ALL solution tabs
+          const allTabs = document.querySelectorAll('.nav-solutions li');
+          allTabs.forEach(tab => tab.style.display = 'none');
+
+          // Now, show ONLY the one relevant to the logged-in user
+          if (userRole === 'traveler') {
+            document.querySelector('.sol-travel').style.display = 'block';
+          }
+          else if (userRole === 'corporate') {
+            document.querySelector('.sol-corp').style.display = 'block';
+          }
+          else if (userRole === 'agent') {
+            document.querySelector('.sol-agent').style.display = 'block';
+          }
+        }
+
+        // Determine dashboard link for the "Hi, Name" button
+        let dashLink = "travellerProfile.html";
+        if (userRole === 'corporate') dashLink = "corporateProfile.html";
+        if (userRole === 'agent') dashLink = "agentProfile.html";
+
+        const userName = userEmail.split('@')[0];
+
+        // Replace Login/Signup with Profile Link + Logout Button
+        authZone.innerHTML = `
+        <li style="list-style:none; display:flex; align-items:center; gap:15px;">
+            <a href="${dashLink}" style="color: var(--teal); font-weight:600; text-decoration:none;">
+               <i class="fas fa-user-circle"></i> Hi, ${userName}
+            </a>
+            <a href="javascript:void(0)" onclick="handleLogout()" 
+               style="color: #ff4d4d; font-size: 11px; border: 1px solid #ff4d4d; padding: 2px 6px; border-radius: 4px; text-decoration:none;">
+               Logout
+            </a>
+        </li>
+    `;
+      }
+
+    });
+
+    // 3. The Logout Function
+    function handleLogout() {
+      if (confirm("Are you sure you want to logout?")) {
+        localStorage.clear(); // Clears email, role, and login status
+        window.location.href = "homepage.html"; // Redirect to public home
+      }
+    }
+</script>
+
+</body>
+</html>

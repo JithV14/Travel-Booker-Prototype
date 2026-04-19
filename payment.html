@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Payment – TravelBooker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f7f9f4;
+      --card: #ffffff;
+      --border: #b8d96e;
+      --accent: #f26522;
+      --accent-hover: #d9541a;
+      --navy: #1a3a5c;
+      --teal: #1dc498;
+      --text: #1a1a1a;
+      --muted: #888;
+      --input-bg: #f0f4ea;
+      --input-border: #d4e6a0;
+      --link: #2563eb;
+      --shadow: 0 8px 40px rgba(100,140,30,0.10);
+      --shadow-lg: 0 16px 60px rgba(26,58,92,0.13);
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 36px 16px 60px;
+      color: var(--text);
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background:
+        radial-gradient(ellipse at 75% 15%, rgba(184,217,110,0.14) 0%, transparent 55%),
+        radial-gradient(ellipse at 15% 85%, rgba(242,101,34,0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(29,196,152,0.05) 0%, transparent 70%);
+      pointer-events: none; z-index: 0;
+    }
+
+    .page-wrap {
+      width: 100%;
+      max-width: 680px;
+      position: relative; z-index: 1;
+    }
+
+    /* ── BACK LINK ── */
+    .back-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      color: var(--link); font-size: 0.93rem; font-weight: 500;
+      text-decoration: none; margin-bottom: 24px;
+      transition: gap 0.2s; letter-spacing: 0.01em;
+    }
+    .back-link:hover { gap: 10px; color: #1a40b0; }
+    .back-link svg { width: 16px; height: 16px; }
+
+    /* ── STEP INDICATOR ── */
+    .steps {
+      display: flex; align-items: center; justify-content: center;
+      gap: 0; margin-bottom: 32px;
+    }
+    .step {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 0.8rem; font-weight: 600; color: var(--muted);
+      letter-spacing: 0.04em; text-transform: uppercase;
+    }
+    .step.done .step-num { background: var(--teal); color: #fff; border-color: var(--teal); }
+    .step.done { color: var(--teal); }
+    .step.active .step-num { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .step.active { color: var(--accent); }
+    .step-num {
+      width: 26px; height: 26px; border-radius: 50%;
+      border: 2px solid currentColor;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: 700; flex-shrink: 0;
+    }
+    .step-line {
+      width: 48px; height: 2px;
+      background: var(--border); margin: 0 6px;
+      flex-shrink: 0;
+    }
+    .step-line.done { background: var(--teal); }
+
+    /* ── MAIN CARD ── */
+    .card {
+      background: var(--card);
+      border: 2.5px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      animation: fadeUp 0.55s cubic-bezier(.22,.68,0,1.2) both;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── CARD HEADER ── */
+    .card-header {
+      background: linear-gradient(135deg, var(--navy) 0%, #0f6e56 100%);
+      padding: 28px 40px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .card-header-left h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem; font-weight: 700;
+      color: #fff; letter-spacing: -0.01em;
+    }
+    .card-header-left p {
+      font-size: 0.83rem; color: rgba(255,255,255,0.65); margin-top: 4px;
+    }
+    .secure-badge {
+      display: flex; align-items: center; gap: 7px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.22);
+      border-radius: 20px; padding: 7px 14px;
+      font-size: 0.78rem; font-weight: 600; color: rgba(255,255,255,0.9);
+    }
+    .secure-badge svg { width: 14px; height: 14px; }
+
+    /* ── CARD BODY ── */
+    .card-body { padding: 36px 40px 40px; }
+
+    /* ── ORDER SUMMARY ── */
+    .summary-box {
+      background: linear-gradient(90deg, #eaf4d0, #f0f8ff);
+      border: 1.5px solid var(--border);
+      border-radius: 12px; padding: 18px 20px;
+      margin-bottom: 30px;
+    }
+    .summary-box h3 {
+      font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em;
+      text-transform: uppercase; color: #3a5c00; margin-bottom: 12px;
+    }
+    .summary-rows { display: flex; flex-direction: column; gap: 7px; }
+    .summary-row {
+      display: flex; justify-content: space-between;
+      font-size: 0.9rem; color: var(--text);
+    }
+    .summary-row .label { color: var(--muted); }
+    .summary-row .value { font-weight: 600; }
+    .summary-divider { border: none; border-top: 1px dashed var(--border); margin: 10px 0; }
+    .summary-total {
+      display: flex; justify-content: space-between;
+      font-size: 1.05rem; font-weight: 700; color: var(--navy);
+    }
+    .summary-total .amount { color: var(--accent); font-size: 1.2rem; }
+
+    /* ── SECTION TITLE ── */
+    .section-title {
+      font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em;
+      text-transform: uppercase; color: #888;
+      margin-bottom: 14px; margin-top: 26px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .section-title::after {
+      content: ''; flex: 1; height: 1px; background: #eee;
+    }
+
+    /* ── PAYMENT METHOD TABS ── */
+    .pay-tabs {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 10px; margin-bottom: 26px;
+    }
+    .pay-tab {
+      border: 2px solid var(--input-border);
+      border-radius: 12px; padding: 14px 10px;
+      text-align: center; cursor: pointer;
+      transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+      background: var(--input-bg);
+    }
+    .pay-tab:hover { border-color: var(--border); background: #f5fce8; }
+    .pay-tab.active {
+      border-color: var(--accent); background: #fff5f0;
+      box-shadow: 0 0 0 3px rgba(242,101,34,0.12);
+    }
+    .pay-tab-icon { font-size: 1.5rem; margin-bottom: 5px; }
+    .pay-tab-label { font-size: 0.78rem; font-weight: 600; color: var(--navy); }
+    .pay-tab.active .pay-tab-label { color: var(--accent); }
+
+    /* ── FORM ── */
+    .form-group { margin-bottom: 18px; }
+    label {
+      display: block; font-size: 0.8rem; font-weight: 600; color: #444;
+      margin-bottom: 6px; letter-spacing: 0.04em; text-transform: uppercase;
+    }
+    input[type="text"], input[type="email"], input[type="tel"],
+    input[type="number"], select {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1.5px solid var(--input-border);
+      border-radius: 9px; padding: 11px 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.96rem; color: var(--text); outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+      appearance: none;
+    }
+    input:focus, select:focus {
+      border-color: var(--border); background: #fff;
+      box-shadow: 0 0 0 3px rgba(184,217,110,0.22);
+    }
+    .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .row-3 { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 14px; }
+
+    /* Card number with icon */
+    .card-input-wrap { position: relative; }
+    .card-input-wrap input { padding-right: 52px; letter-spacing: 0.1em; }
+    .card-icons {
+      position: absolute; right: 12px; top: 50%;
+      transform: translateY(-50%);
+      display: flex; gap: 4px; align-items: center;
+    }
+    .card-icons span {
+      font-size: 1.1rem; opacity: 0.6;
+    }
+
+    /* CVV hint */
+    .cvv-wrap { position: relative; }
+    .cvv-hint {
+      position: absolute; right: 12px; top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.75rem; color: var(--muted); cursor: help;
+    }
+
+    /* ── BILLING TOGGLE ── */
+    .toggle-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 16px;
+      background: var(--input-bg);
+      border: 1.5px solid var(--input-border);
+      border-radius: 10px; margin-bottom: 18px; cursor: pointer;
+      transition: background 0.15s;
+    }
+    .toggle-row:hover { background: #e8f2d8; }
+    .toggle-label { font-size: 0.88rem; font-weight: 500; color: var(--navy); }
+    .toggle-sub { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+    .toggle-switch {
+      width: 40px; height: 22px;
+      background: #ddd; border-radius: 11px;
+      position: relative; transition: background 0.2s; flex-shrink: 0;
+    }
+    .toggle-switch.on { background: var(--teal); }
+    .toggle-switch::after {
+      content: ''; position: absolute;
+      top: 3px; left: 3px;
+      width: 16px; height: 16px;
+      background: #fff; border-radius: 50%;
+      transition: left 0.2s;
+    }
+    .toggle-switch.on::after { left: 21px; }
+
+    /* ── SECURITY NOTE ── */
+    .security-note {
+      display: flex; align-items: flex-start; gap: 10px;
+      background: #f0f9ff; border: 1.5px solid #b5d4f4;
+      border-radius: 10px; padding: 12px 16px; margin-top: 8px; margin-bottom: 26px;
+      font-size: 0.82rem; color: #185fa5; line-height: 1.5;
+    }
+    .security-note svg { width: 16px; height: 16px; flex-shrink: 0; margin-top: 1px; }
+
+    /* ── PAY BUTTON ── */
+    .pay-row {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; flex-wrap: wrap;
+    }
+    .pay-amount {
+      font-size: 0.82rem; color: var(--muted);
+      display: flex; flex-direction: column;
+    }
+    .pay-amount strong {
+      font-size: 1.3rem; font-weight: 700; color: var(--navy);
+    }
+    .btn-pay {
+      background: var(--accent); color: #fff; border: none;
+      border-radius: 12px; padding: 15px 38px;
+      font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 700;
+      cursor: pointer; letter-spacing: 0.02em;
+      box-shadow: 0 6px 22px rgba(242,101,34,0.30);
+      transition: background 0.18s, transform 0.15s, box-shadow 0.18s;
+      display: flex; align-items: center; gap: 9px;
+    }
+    .btn-pay:hover {
+      background: var(--accent-hover); transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(242,101,34,0.38);
+    }
+    .btn-pay:active { transform: translateY(0); }
+    .btn-pay svg { width: 18px; height: 18px; }
+
+    /* ── SUCCESS OVERLAY ── */
+    .success-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(10,25,47,0.7);
+      z-index: 9999; justify-content: center; align-items: center;
+      backdrop-filter: blur(6px);
+    }
+    .success-overlay.active { display: flex; }
+    .success-box {
+      background: #fff; border-radius: 24px;
+      padding: 48px 44px; text-align: center;
+      max-width: 400px; width: 90%;
+      animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    @keyframes popIn {
+      from { transform: scale(0.8) translateY(20px); opacity: 0; }
+      to   { transform: scale(1) translateY(0); opacity: 1; }
+    }
+    .success-icon {
+      width: 72px; height: 72px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--teal), #0aa878);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px; font-size: 2rem;
+    }
+    .success-box h2 {
+      font-family: 'Playfair Display', serif; font-size: 1.6rem;
+      color: var(--navy); margin-bottom: 10px;
+    }
+    .success-box p { font-size: 0.93rem; color: var(--muted); line-height: 1.6; margin-bottom: 24px; }
+    .success-ref {
+      background: #f0f9f5; border: 1.5px solid #b5e8d4;
+      border-radius: 10px; padding: 10px 16px;
+      font-size: 0.85rem; color: #0aa878; font-weight: 700;
+      margin-bottom: 24px; letter-spacing: 0.05em;
+    }
+    .btn-done {
+      background: var(--accent); color: #fff; border: none;
+      border-radius: 10px; padding: 12px 32px;
+      font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 700;
+      cursor: pointer; transition: background 0.15s;
+      text-decoration: none; display: inline-block;
+    }
+    .btn-done:hover { background: var(--accent-hover); }
+
+    /* ── PAYMENT PANELS ── */
+    .pay-panel { display: none; }
+    .pay-panel.active { display: block; }
+
+    @media (max-width: 560px) {
+      .card-body { padding: 24px 20px 28px; }
+      .card-header { padding: 22px 20px; flex-direction: column; gap: 12px; }
+      .row-2, .row-3 { grid-template-columns: 1fr; }
+      .pay-tabs { grid-template-columns: repeat(3,1fr); }
+      .pay-row { flex-direction: column; align-items: stretch; }
+      .btn-pay { justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-wrap">
+
+  <!-- Back link -->
+  <a href="bookingPage_hotels.html" class="back-link" id="backLink">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="10 12 6 8 10 4"/>
+    </svg>
+    Back to Booking Details
+  </a>
+
+  <!-- Step indicator -->
+  <div class="steps">
+    <div class="step done">
+      <span class="step-num">✓</span>
+      <span>Package</span>
+    </div>
+    <div class="step-line done"></div>
+    <div class="step done">
+      <span class="step-num">✓</span>
+      <span>Details</span>
+    </div>
+    <div class="step-line"></div>
+    <div class="step active">
+      <span class="step-num">3</span>
+      <span>Payment</span>
+    </div>
+  </div>
+
+  <div class="card">
+
+    <!-- Header -->
+    <div class="card-header">
+      <div class="card-header-left">
+        <h1>Complete Payment</h1>
+        <p>Confirm your booking and pay securely</p>
+      </div>
+      <div class="secure-badge">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M8 1L2 4v4c0 3.5 2.5 6.5 6 7.5C11.5 14.5 14 11.5 14 8V4L8 1z"/>
+        </svg>
+        SSL Secured
+      </div>
+    </div>
+
+    <div class="card-body">
+
+      <!-- Order Summary -->
+      <div class="summary-box">
+        <h3>Order Summary</h3>
+        <div class="summary-rows">
+          <div class="summary-row">
+            <span class="label">Package</span>
+            <span class="value" id="sum-package">–</span>
+          </div>
+          <div class="summary-row">
+            <span class="label">Tour Period</span>
+            <span class="value" id="sum-period">–</span>
+          </div>
+          <div class="summary-row">
+            <span class="label">Travellers</span>
+            <span class="value" id="sum-travellers">–</span>
+          </div>
+          <div class="summary-row">
+            <span class="label">Passenger</span>
+            <span class="value" id="sum-name">–</span>
+          </div>
+        </div>
+        <hr class="summary-divider"/>
+        <div class="summary-total">
+          <span>Total Amount</span>
+          <span class="amount" id="sum-total">LKR –</span>
+        </div>
+      </div>
+
+      <!-- Payment Method -->
+      <div class="section-title">Choose Payment Method</div>
+      <div class="pay-tabs">
+        <div class="pay-tab active" onclick="selectTab('card', this)">
+          <div class="pay-tab-icon">💳</div>
+          <div class="pay-tab-label">Credit / Debit</div>
+        </div>
+        <div class="pay-tab" onclick="selectTab('bank', this)">
+          <div class="pay-tab-icon">🏦</div>
+          <div class="pay-tab-label">Bank Transfer</div>
+        </div>
+        <div class="pay-tab" onclick="selectTab('wallet', this)">
+          <div class="pay-tab-icon">📱</div>
+          <div class="pay-tab-label">eWallet</div>
+        </div>
+      </div>
+
+      <!-- ── CARD PANEL ── -->
+      <div class="pay-panel active" id="panel-card">
+        <div class="form-group">
+          <label>Cardholder Name</label>
+          <input type="text" placeholder="Name as on card" />
+        </div>
+        <div class="form-group">
+          <label>Card Number</label>
+          <div class="card-input-wrap">
+            <input type="text" placeholder="0000  0000  0000  0000" maxlength="19"
+              oninput="formatCard(this)" />
+            <div class="card-icons"><span>💳</span></div>
+          </div>
+        </div>
+        <div class="row-2">
+          <div class="form-group">
+            <label>Expiry Date</label>
+            <input type="text" placeholder="MM / YY" maxlength="7" oninput="formatExpiry(this)" />
+          </div>
+          <div class="form-group">
+            <label>CVV</label>
+            <div class="cvv-wrap">
+              <input type="text" placeholder="•••" maxlength="4" />
+              <span class="cvv-hint" title="3-digit security code on back of card">?</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── BANK PANEL ── -->
+      <div class="pay-panel" id="panel-bank">
+        <div class="form-group">
+          <label>Bank Name</label>
+          <select>
+            <option value="">Select your bank</option>
+            <option>Bank of Ceylon</option>
+            <option>Commercial Bank of Ceylon</option>
+            <option>Hatton National Bank</option>
+            <option>Sampath Bank</option>
+            <option>People's Bank</option>
+            <option>Nations Trust Bank</option>
+          </select>
+        </div>
+        <div class="row-2">
+          <div class="form-group">
+            <label>Account Number</label>
+            <input type="text" placeholder="Enter account number" />
+          </div>
+          <div class="form-group">
+            <label>Branch Code</label>
+            <input type="text" placeholder="e.g. 0001" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Account Holder Name</label>
+          <input type="text" placeholder="Full name on account" />
+        </div>
+      </div>
+
+      <!-- ── WALLET PANEL ── -->
+      <div class="pay-panel" id="panel-wallet">
+        <div class="form-group">
+          <label>eWallet Provider</label>
+          <select>
+            <option value="">Select provider</option>
+            <option>eZ Cash (Dialog)</option>
+            <option>mCash (Mobitel)</option>
+            <option>FriMi</option>
+            <option>PayHere</option>
+            <option>Genie (HNB)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Registered Mobile Number</label>
+          <input type="tel" placeholder="+94 7X XXX XXXX" />
+        </div>
+        <div class="form-group">
+          <label>Wallet PIN / OTP</label>
+          <input type="text" placeholder="Enter PIN or OTP" maxlength="6" />
+        </div>
+      </div>
+
+      <!-- Save card toggle -->
+      <div class="toggle-row" onclick="toggleSave(this)">
+        <div>
+          <div class="toggle-label">Save payment details</div>
+          <div class="toggle-sub">Faster checkout next time</div>
+        </div>
+        <div class="toggle-switch" id="saveToggle"></div>
+      </div>
+
+      <!-- Security note -->
+      <div class="security-note">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M8 1L2 4v4c0 3.5 2.5 6.5 6 7.5C11.5 14.5 14 11.5 14 8V4L8 1z"/>
+        </svg>
+        Your payment is protected by 256-bit SSL encryption. TravelBooker never stores your full card details.
+      </div>
+
+      <!-- Pay button row -->
+      <div class="pay-row">
+        <div class="pay-amount">
+          <span>You will be charged</span>
+          <strong id="pay-total-display">LKR –</strong>
+        </div>
+        <button class="btn-pay" onclick="handlePay()">
+          Confirm &amp; Pay
+          <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 4 12 9 6 14"/>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ── SUCCESS MODAL ── -->
+<div class="success-overlay" id="successOverlay">
+  <div class="success-box">
+    <div class="success-icon">✅</div>
+    <h2>Booking Confirmed!</h2>
+    <p>Your trip has been booked successfully. A confirmation will be sent to your email shortly.</p>
+    <div class="success-ref" id="bookingRef">Booking Ref: #TB-000000</div>
+    <a href="travelPackage.html" class="btn-done">Back to Packages</a>
+  </div>
+</div>
+
+<script>
+  // ── Read URL params passed from booking-details ──
+  const params = new URLSearchParams(window.location.search);
+  const pkg     = params.get('package')     || '–';
+  const period  = params.get('period')      || '–';
+  const adults  = params.get('adults')      || '1';
+  const kids    = params.get('kids')        || '0';
+  const name    = params.get('name')        || '–';
+  const total   = params.get('total')       || 'LKR 0';
+
+  // Populate summary
+  document.getElementById('sum-package').textContent    = pkg;
+  document.getElementById('sum-period').textContent     = period;
+  document.getElementById('sum-travellers').textContent = `${adults} Adult(s), ${kids} Kid(s)`;
+  document.getElementById('sum-name').textContent       = name;
+  document.getElementById('sum-total').textContent      = total;
+  document.getElementById('pay-total-display').textContent = total;
+
+  // Pass package back in back-link
+  const backLink = document.getElementById('backLink');
+  backLink.href = `bookingPage_package.html?package=${encodeURIComponent(pkg)}`;
+
+  // ── Tab switching ──
+  function selectTab(type, el) {
+    document.querySelectorAll('.pay-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    document.querySelectorAll('.pay-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('panel-' + type).classList.add('active');
+  }
+
+  // ── Save toggle ──
+  function toggleSave(row) {
+    const sw = document.getElementById('saveToggle');
+    sw.classList.toggle('on');
+  }
+
+  // ── Card number formatter ──
+  function formatCard(el) {
+    let val = el.value.replace(/\D/g,'').substring(0,16);
+    el.value = val.replace(/(.{4})/g,'$1  ').trim();
+  }
+
+  // ── Expiry formatter ──
+  function formatExpiry(el) {
+    let val = el.value.replace(/\D/g,'');
+    if (val.length >= 2) val = val.substring(0,2) + ' / ' + val.substring(2,4);
+    el.value = val;
+  }
+
+  // ── Pay handler ──
+  function handlePay() {
+    const ref = 'TB-' + Math.random().toString(36).substring(2,8).toUpperCase();
+    document.getElementById('bookingRef').textContent = 'Booking Ref: #' + ref;
+    document.getElementById('successOverlay').classList.add('active');
+  }
+</script>
+</body>
+</html>

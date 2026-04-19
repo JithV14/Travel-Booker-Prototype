@@ -1,0 +1,1563 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin – TravelBooker</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600&display=swap');
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --navy: #1b3050;
+            --navy-dark: #112240;
+            --teal: #1dc498;
+            --teal-dim: rgba(29, 196, 152, .12);
+            --sidebar-bg: #0f1e35;
+            --sidebar-w: 240px;
+            --topbar-h: 60px;
+            --bg: #f0f4f8;
+            --card-bg: #ffffff;
+            --text-dark: #1e293b;
+            --text-mid: #64748b;
+            --border: #e2e8f0;
+            --radius-lg: 14px;
+            --shadow: 0 2px 12px rgba(0, 0, 0, .07);
+
+            /* Status Colors */
+            --status-success: #10b981;
+            --status-pending: #f59e0b;
+            --status-info: #3b82f6;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        /* ══════════════════════════════════════ LOGIN SCREEN ══════════════════════════════════════ */
+        #login-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--navy-dark);
+        }
+
+        #login-screen.hidden {
+            display: none;
+        }
+
+        .login-card {
+            width: min(400px, 90%);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+
+        .login-logo img {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            background: white;
+            padding: 4px;
+            margin-bottom: 25px;
+        }
+
+        .login-card h2 {
+            color: white;
+            font-family: 'Syne';
+            margin-bottom: 10px;
+        }
+
+        .login-card p {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 12px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: white;
+            outline: none;
+        }
+
+        .input-group input:focus {
+            border-color: var(--teal);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--teal);
+            color: var(--navy-dark);
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Syne';
+            transition: 0.3s;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+
+        /* ══════════════════════════════════════ DASHBOARD ══════════════════════════════════════ */
+        #dashboard {
+            display: none;
+            min-height: 100vh;
+        }
+
+        #dashboard.visible {
+            display: flex;
+        }
+
+        .sidebar {
+            width: var(--sidebar-w);
+            background: var(--sidebar-bg);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+        }
+
+        .sb-top {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .sb-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+            font-family: 'Merriweather', serif;
+            font-weight: 800;
+        }
+
+        .sb-brand img {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            background: white;
+            padding: 2px;
+        }
+
+        .sb-nav {
+            padding: 15px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            color: rgba(255, 255, 255, 0.5);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: 0.3s;
+            margin-bottom: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: var(--teal-dim);
+            color: var(--teal);
+        }
+
+        .main {
+            margin-left: var(--sidebar-w);
+            flex: 1;
+            padding: 30px;
+        }
+
+        .topbar {
+            height: var(--topbar-h);
+            background: white;
+            margin: -30px -30px 30px -30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* ══════════════════════════════════════ VIEW TOGGLE ══════════════════════════════════════ */
+        .page-view {
+            display: none;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .page-view.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ══════════════════════════════════════ TILES & TABLES ══════════════════════════════════════ */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .page-header h2 {
+            font-family: 'Syne';
+            font-size: 22px;
+        }
+
+        .add-btn {
+            background: var(--navy);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+        }
+
+        .item-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .tile-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .tile-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .tile-img {
+            width: 100%;
+            height: 180px;
+            background: #e2e8f0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .tile-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .tile-status {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: var(--teal);
+            color: var(--navy-dark);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .tile-content {
+            padding: 20px;
+        }
+
+        .tile-content h3 {
+            font-family: 'Syne';
+            font-size: 17px;
+            margin-bottom: 8px;
+            color: var(--navy);
+        }
+
+        .tile-content p {
+            font-size: 13px;
+            color: var(--text-mid);
+            line-height: 1.6;
+            margin-bottom: 15px;
+            height: 42px;
+            overflow: hidden;
+        }
+
+        /*Agent commmission button under packages*/
+        .commission-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #edf7f2;
+            border: 1px solid #b6e8d0;
+            border-radius: var(--radius-md);
+            padding: 10px 14px;
+        }
+
+        .commission-label {
+            font-size: 12px;
+            color: #2a7a50;
+            font-weight: 500;
+        }
+
+        .commission-pct {
+            font-family: var(--font-head);
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a6640;
+        }
+
+
+        .tile-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 1px solid var(--border);
+        }
+
+        .tile-price {
+            font-weight: 700;
+            color: var(--navy);
+            font-size: 16px;
+        }
+
+        .tile-price span {
+            font-size: 12px;
+            color: var(--text-mid);
+            font-weight: 400;
+        }
+
+        .tile-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.2s;
+            color: var(--text-mid);
+        }
+
+        .action-btn:hover {
+            background: #f8fafc;
+            color: var(--navy);
+            border-color: var(--navy);
+        }
+
+        .btn-delete:hover {
+            color: #e11d48;
+            border-color: #e11d48;
+            background: #fff1f2;
+        }
+
+        /* Status Badges for Tables */
+        .badge {
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge-direct {
+            background: #e0f2fe;
+            color: #0369a1;
+        }
+
+        .badge-agent {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-corporate {
+            background: #ede9fe;
+            color: #5b21b6;
+        }
+
+        .badge-confirmed {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-pending {
+            background: #fff7ed;
+            color: #9a3412;
+        }
+
+        .data-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-header h3 {
+            font-family: 'Syne';
+            font-size: 16px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 15px;
+            background: #f8fafc;
+            font-size: 11px;
+            color: var(--text-mid);
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid var(--border);
+            font-size: 13px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+        }
+
+        .stat-card h4 {
+            color: var(--text-mid);
+            font-size: 12px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .stat-card p {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--navy);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="login-screen">
+        <div class="login-card">
+            <div class="login-logo"><img src="Travel Booker logo design.png" alt="Logo"></div>
+            <h2>Admin Login</h2>
+            <p>TravelBooker Internal Control</p>
+            <div class="input-group"><label>Email Address</label><input type="email" value="admin@travelbooker.com">
+            </div>
+            <div class="input-group"><label>Password</label><input type="password" value="••••••••"></div>
+            <button class="login-btn" onclick="handleLogin()">Sign In</button>
+        </div>
+    </div>
+
+    <div id="dashboard">
+        <aside class="sidebar">
+            <div class="sb-top">
+                <div class="sb-brand"><img src="Travel Booker logo design.png"
+                        alt="Logo"><span>TravelBooker</span></div>
+            </div>
+            <nav class="sb-nav">
+                <div class="nav-item active" onclick="showPage('overview', this)"><i class="fas fa-th-large"></i>
+                    Dashboard</div>
+                <div class="nav-item" onclick="showPage('tours', this)"><i class="fas fa-map-marked-alt"></i> Tour
+                    Packages</div>
+                <div class="nav-item" onclick="showPage('hotels', this)"><i class="fas fa-hotel"></i> Hotels</div>
+                <div class="nav-item" onclick="showPage('customers', this)"><i class="fas fa-user-friends"></i>
+                    Customers</div>
+                <div class="nav-item" onclick="showPage('bookings', this)"><i class="fas fa-calendar-check"></i>
+                    Bookings</div>
+                <div class="nav-item" onclick="showPage('finance', this)"><i class="fas fa-file-invoice-dollar"></i>
+                    Finance</div>
+                <div class="nav-item" onclick="showPage('staff', this)"><i class="fas fa-users"></i> Staff Directory
+                </div>
+                <div class="nav-item" onclick="showPage('settings', this)"><i class="fas fa-cog"></i> Settings</div>
+                <div class="nav-item" onclick="location.reload()" style="margin-top: 30px;"><i
+                        class="fas fa-sign-out-alt"></i> Logout</div>
+            </nav>
+        </aside>
+
+        <main class="main">
+            <header class="topbar">
+                <div id="breadcrumb">Dashboard / <strong>Overview</strong></div>
+                <div>Welcome, <strong>Admin</strong></div>
+            </header>
+
+            <div id="page-overview" class="page-view active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h4>Tours</h4>
+                        <p>24</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Hotels</h4>
+                        <p>18</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Active Bookings</h4>
+                        <p>142</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Revenue</h4>
+                        <p>Rs. 20,240,000</p>
+                    </div>
+                </div>
+                <div class="data-card">
+                    <div class="card-header">
+                        <h3>Recent Activity</h3>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Entity</th>
+                                <th>Event</th>
+                                <th>User</th>
+                                <th>Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Galle Heritage</strong></td>
+                                <td>Price Updated</td>
+                                <td>Admin</td>
+                                <td>10m ago</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Booking #1042</strong></td>
+                                <td>Confirmed</td>
+                                <td>System</td>
+                                <td>25m ago</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="stats-grid" style="margin-bottom: 25px;">
+                    <div class="stat-card" style="cursor: pointer; border-left: 4px solid var(--teal);">
+                        <div class="stat-label"><i class="fas fa-plus-circle"></i> Quick Action</div>
+                        <div class="stat-value" style="font-size: 1.2rem;">New Booking</div>
+                    </div>
+                    <div class="stat-card" style="cursor: pointer; border-left: 4px solid #3498db;">
+                        <div class="stat-label"><i class="fas fa-file-invoice"></i> Quick Action</div>
+                        <div class="stat-value" style="font-size: 1.2rem;">Issue Invoice</div>
+                    </div>
+                    <div class="stat-card" style="cursor: pointer; border-left: 4px solid #f1c40f;">
+                        <div class="stat-label"><i class="fas fa-user-plus"></i> Quick Action</div>
+                        <div class="stat-value" style="font-size: 1.2rem;">Add Customer</div>
+                    </div>
+                    <div class="stat-card" style="cursor: pointer; border-left: 4px solid #e74c3c;">
+                        <div class="stat-label"><i class="fas fa-exclamation-triangle"></i> System Log</div>
+                        <div class="stat-value" style="font-size: 1.2rem;">View Alerts</div>
+                    </div>
+                </div>
+                <div class="data-card">
+                    <div class="card-header">
+                        <h3>Recent System Activity</h3>
+                    </div>
+                    <div style="padding: 10px 20px;">
+                        <ul style="list-style: none;">
+                            <li
+                                style="padding: 12px 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between;">
+                                <span><i class="fas fa-check-circle" style="color: var(--teal);"></i> New Booking
+                                    confirmed for <strong>Shabeer</strong></span>
+                                <span style="color: #888; font-size: 0.85rem;">2 mins ago</span>
+                            </li>
+                            <li
+                                style="padding: 12px 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between;">
+                                <span><i class="fas fa-file-invoice-dollar" style="color: #3498db;"></i> Invoice
+                                    <strong>#INV-9004</strong> generated</span>
+                                <span style="color: #888; font-size: 0.85rem;">15 mins ago</span>
+                            </li>
+                            <li
+                                style="padding: 12px 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between;">
+                                <span><i class="fas fa-user-edit" style="color: #f1c40f;"></i> <strong>David
+                                        Pillaar</strong> updated profile details</span>
+                                <span style="color: #888; font-size: 0.85rem;">1 hour ago</span>
+                            </li>
+                            <li style="padding: 12px 0; display: flex; justify-content: space-between;">
+                                <span><i class="fas fa-hotel" style="color: #e74c3c;"></i> <strong>Cape
+                                        Weligama</strong> updated seasonal rates</span>
+                                <span style="color: #888; font-size: 0.85rem;">3 hours ago</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="data-card">
+                    <div class="card-header">
+                        <h3>Monthly Revenue Target</h3>
+                    </div>
+                    <div style="padding: 25px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <span style="font-weight: 600;">LKR 8.5M / 10.0M</span>
+                            <span style="color: var(--teal); font-weight: 700;">85%</span>
+                        </div>
+                        <div style="width: 100%; height: 12px; background: #eee; border-radius: 6px; overflow: hidden;">
+                            <div style="width: 85%; height: 100%; background: var(--teal);"></div>
+                        </div>
+                        <p style="margin-top: 15px; font-size: 0.9rem; color: #666;">
+                            <i class="fas fa-info-circle"></i> You are LKR 1.5M away from reaching your April target.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="page-tours" class="page-view">
+                <!--TOUR PACKAGES - direct customers-->
+                <div class="page-header">
+                    <h2>Tour Packages</h2><button class="add-btn"><i class="fas fa-plus"></i> New Tour</button>
+                </div>
+                <div class="item-grid">
+                    <div class="tile-card">
+                        <div class="tile-img"><img src="Galle.jpg" alt="Galle">
+                            <div class="tile-status">Live</div>
+                        </div>
+                        <div class="tile-content">
+                            <h3>Galle – Coastal Heritage</h3>
+                            <p>A historic fortress city where colonial charm meets the wild Indian Ocean.</p>
+                            <div class="tile-meta">
+                                <div class="tile-price">Rs. 20,000</div>
+                                <div class="tile-actions">
+                                    <button class="action-btn"><i class="fas fa-pencil-alt"></i></button>
+                                    <button class="action-btn btn-delete"><i class="fas fa-trash-alt"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tile-card">
+                        <div class="tile-img"><img src="Ella-train.jpg" alt="Ella">
+                            <div class="tile-status">Live</div>
+                        </div>
+                        <div class="tile-content">
+                            <h3>Ella – Emerald Peak</h3>
+                            <p>A scenic mountain escape famous for iconic bridges and tea trails.</p>
+                            <div class="tile-meta">
+                                <div class="tile-price">Rs. 25,000</div>
+                                <div class="tile-actions">
+                                    <button class="action-btn"><i class="fas fa-pencil-alt"></i></button>
+                                    <button class="action-btn btn-delete"><i class="fas fa-trash-alt"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tile-card">
+                        <div class="tile-img"><img src="SIGIRIYA.jpg" alt="Sigiriya">
+                            <div class="tile-status">Live</div>
+                        </div>
+                        <div class="tile-content">
+                            <h3>Sigiriya – Lion's Peak</h3>
+                            <p>A grand rock fortress rising from the jungle with ancient ruins.</p>
+                            <div class="tile-meta">
+                                <div class="tile-price">Rs. 50,000</div>
+                                <div class="tile-actions">
+                                    <button class="action-btn"><i class="fas fa-pencil-alt"></i></button>
+                                    <button class="action-btn btn-delete"><i class="fas fa-trash-alt"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tile-card">
+                        <div class="tile-img"><img src="jaffna-sri-lanka.jpg" alt="Jaffna">
+                            <div class="tile-status">Live</div>
+                        </div>
+                        <div class="tile-content">
+                            <h3>Jaffna – Northern Gem</h3>
+                            <p>Explore the distinctive culture, cuisine, and history of the northern peninsula.</p>
+                            <div class="tile-meta">
+                                <div class="tile-price">Rs. 45,000</div>
+                                <div class="tile-actions">
+                                    <button class="action-btn"><i class="fas fa-pencil-alt"></i></button>
+                                    <button class="action-btn btn-delete"><i class="fas fa-trash-alt"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tile-card">
+                        <div class="tile-img"><img src="trincoo.jpg" alt="Trincomalee">
+                            <div class="tile-status">Live</div>
+                        </div>
+                        <div class="tile-content">
+                            <h3>Trincomalee – Deep Blue Discovery</h3>
+                            <p>Explore the coastal sanctuary, cuisine, and meet pristine coral beaches.</p>
+                            <div class="tile-meta">
+                                <div class="tile-price">Rs. 55,000</div>
+                                <div class="tile-actions">
+                                    <button class="action-btn"><i class="fas fa-pencil-alt"></i></button>
+                                    <button class="action-btn btn-delete"><i class="fas fa-trash-alt"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tile-card">
+                        <div class="tile-img"><img src="aru2.jpg" alt="ArugamBay">
+                            <div class="tile-status">Live</div>
+                        </div>
+                        <div class="tile-content">
+                            <h3>Arugam Bay – Surf and Safari Trail</h3>
+                            <p>Explore the legendary surf hub where the waves meet the wild.</p>
+                            <div class="tile-meta">
+                                <div class="tile-price">Rs. 45,000</div>
+                                <div class="tile-actions">
+                                    <button class="action-btn"><i class="fas fa-pencil-alt"></i></button>
+                                    <button class="action-btn btn-delete"><i class="fas fa-trash-alt"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br><br>
+                <!--AGENT TOUR PACKAGES-->
+                <div class="page-header">
+                    <h2>Agent Packages</h2><button class="add-btn"><i class="fas fa-plus"></i> New Tour</button>
+                </div>
+                <div class="item-grid">
+                    <div class="tile-card">
+                        <div class="tile-img"><img src="Galle.jpg" alt="Galle">
+                            <div class="tile-status">Live</div>
+                        </div>
+                        <div class="tile-content">
+                            <h3>Cultural & Coastal Explorer</h3>
+                            <p>Perfect for group tours and corporate clients.</p>
+                            <div class="commission-row">
+                                <div class="commission-label">Agent Commission</div>
+                                <div class="commission-pct">10%</div>
+                            </div>
+                            <div class="tile-meta">
+                                <div class="tile-price">Rs. 185,000 / person</div>
+                                <div class="tile-actions">
+                                    <button class="action-btn"><i class="fas fa-pencil-alt"></i></button>
+                                    <button class="action-btn btn-delete"><i class="fas fa-trash-alt"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tile-card">
+                        <div class="tile-img"><img src="Ella-train.jpg" alt="Ella">
+                            <div class="tile-status">Live</div>
+                        </div>
+                        <div class="tile-content">
+                            <h3>Luxury Beach Retreat</h3>
+                            <p>High-end coastal experience for premium clients.</p>
+                            <div class="commission-row">
+                                <div class="commission-label">Agent Commission</div>
+                                <div class="commission-pct">12%</div>
+                            </div>
+                            <div class="tile-meta">
+                                <div class="tile-price">Rs. 210,000 / person</div>
+                                <div class="tile-actions">
+                                    <button class="action-btn"><i class="fas fa-pencil-alt"></i></button>
+                                    <button class="action-btn btn-delete"><i class="fas fa-trash-alt"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tile-card">
+                        <div class="tile-img"><img src="SIGIRIYA.jpg" alt="Sigiriya">
+                            <div class="tile-status">Live</div>
+                        </div>
+                        <div class="tile-content">
+                            <h3>Heritage & Wildlife Tour</h3>
+                            <p>Ideal for international and nature-focused groups.</p>
+                            <div class="commission-row">
+                                <div class="commission-label">Agent Commission</div>
+                                <div class="commission-pct">11%</div>
+                            </div>
+                            <div class="tile-meta">
+                                <div class="tile-price">Rs. 240,000 / person</div>
+                                <div class="tile-actions">
+                                    <button class="action-btn"><i class="fas fa-pencil-alt"></i></button>
+                                    <button class="action-btn btn-delete"><i class="fas fa-trash-alt"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div id="page-hotels" class="page-view">
+
+                <div class="page-header">
+                    <h2>Hotels Management</h2><button class="add-btn"><i class="fas fa-plus"></i> Add Hotel</button>
+                </div>
+                <div class="item-grid">
+                    <div class="tile-card">
+                        <div class="tile-img"><img src="grand.jpeg" alt="Hotel">
+                            <div class="tile-status">Premium</div>
+                        </div>
+                        <div class="tile-content">
+                            <h3>Cinnamon Grand Colombo</h3>
+                            <p>A luxury city hotel in Colombo offering world-class dining, modern comfort, and easy
+                                access to business and shopping areas.</p>
+                            <div class="tile-meta">
+                                <div class="tile-price">Rs. 35,000 <span>/night</span></div>
+                                <div class="tile-actions">
+                                    <button class="action-btn"><i class="fas fa-pencil-alt"></i></button>
+                                    <button class="action-btn btn-delete"><i class="fas fa-trash-alt"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tile-card">
+                        <div class="tile-img"><img src="jetwing.jpeg" alt="Hotel">
+                            <div class="tile-status">Premium</div>
+                        </div>
+                        <div class="tile-content">
+                            <h3>Jetwing Blue – Negombo</h3>
+                            <p>A beachfront resort in Negombo offering relaxing ocean views, modern amenities, and a
+                                peaceful tropical escape.</p>
+                            <div class="tile-meta">
+                                <div class="tile-price">Rs. 28,000 <span>/night</span></div>
+                                <div class="tile-actions">
+                                    <button class="action-btn"><i class="fas fa-pencil-alt"></i></button>
+                                    <button class="action-btn btn-delete"><i class="fas fa-trash-alt"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tile-card">
+                        <div class="tile-img"><img src="dambulla.jpeg" alt="Hotel">
+                            <div class="tile-status">Premium</div>
+                        </div>
+                        <div class="tile-content">
+                            <h3>Heritance Kandalama – Dambulla</h3>
+                            <p>A unique eco-luxury hotel surrounded by nature, offering breathtaking views of the
+                                Sigiriya and Dambulla region.</p>
+                            <div class="tile-meta">
+                                <div class="tile-price">Rs. 20,000 <span>/night</span></div>
+                                <div class="tile-actions">
+                                    <button class="action-btn"><i class="fas fa-pencil-alt"></i></button>
+                                    <button class="action-btn btn-delete"><i class="fas fa-trash-alt"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tile-card">
+                        <div class="tile-img"><img src="uga.jpeg" alt="Hotel">
+                            <div class="tile-status">Premium</div>
+                        </div>
+                        <div class="tile-content">
+                            <h3>Uga Ulagalla – Anuradhapura</h3>
+                            <p>A luxury boutique resort offering private villas, tranquility, and a premium cultural
+                                retreat experience.</p>
+                            <div class="tile-meta">
+                                <div class="tile-price">Rs. 35,000 <span>/night</span></div>
+                                <div class="tile-actions">
+                                    <button class="action-btn"><i class="fas fa-pencil-alt"></i></button>
+                                    <button class="action-btn btn-delete"><i class="fas fa-trash-alt"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tile-card">
+                        <div class="tile-img"><img src="Cape_wel.jpeg" alt="Hotel">
+                            <div class="tile-status">Premium</div>
+                        </div>
+                        <div class="tile-content">
+                            <h3>Cape Weligama – Weligama</h3>
+                            <p>A cliff-top luxury resort offering stunning ocean views, infinity pools, and a high-end
+                                coastal experience.</p>
+                            <div class="tile-meta">
+                                <div class="tile-price">Rs. 25,000 <span>/night</span></div>
+                                <div class="tile-actions">
+                                    <button class="action-btn"><i class="fas fa-pencil-alt"></i></button>
+                                    <button class="action-btn btn-delete"><i class="fas fa-trash-alt"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tile-card">
+                        <div class="tile-img"><img src="tangalle.jpeg" alt="Hotel">
+                            <div class="tile-status">Premium</div>
+                        </div>
+                        <div class="tile-content">
+                            <h3>Ranna 212 By Auro Resorts – Tangalle</h3>
+                            <p>Beachfront resort ideal for peaceful coastal escapes and nature lovers.</p>
+                            <div class="tile-meta">
+                                <div class="tile-price">Rs. 36,000 <span>/night</span></div>
+                                <div class="tile-actions">
+                                    <button class="action-btn"><i class="fas fa-pencil-alt"></i></button>
+                                    <button class="action-btn btn-delete"><i class="fas fa-trash-alt"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="page-customers" class="page-view">
+                <div class="page-header">
+                    <h2>Customer Database</h2><button class="add-btn"><i class="fas fa-user-plus"></i> New
+                        Profile</button>
+                </div>
+                <div class="data-card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Customer Name</th>
+                                <th>Category</th>
+                                <th>Contact</th>
+                                <th>Joined</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Tara Johns</strong></td>
+                                <td><span class="badge badge-direct">Direct Customer</span></td>
+                                <td>tara324@email.com</td>
+                                <td>Apr 12, 2025</td>
+                                <td><i class="fas fa-ellipsis-h"></i></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Classic Travels</strong></td>
+                                <td><span class="badge badge-agent">Agent</span></td>
+                                <td>amila@classictravels.com</td>
+                                <td>May 18, 2025</td>
+                                <td><i class="fas fa-ellipsis-h"></i></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Shabeer Ahemed</strong></td>
+                                <td><span class="badge badge-corporate">Corporate Customer</span></td>
+                                <td>shabeer@nova.com</td>
+                                <td>Jan 22, 2025</td>
+                                <td><i class="fas fa-ellipsis-h"></i></td>
+                            </tr>
+                            <tr>
+                                <td><strong>JPP glass (pvt) Ltd</strong></td>
+                                <td><span class="badge badge-corporate">Corporate Customer</span></td>
+                                <td>adnan@jpp.com</td>
+                                <td>Feb 16, 2025</td>
+                                <td><i class="fas fa-ellipsis-h"></i></td>
+                            </tr>
+                            <tr>
+                                <td><strong>David Pillaar</strong></td>
+                                <td><span class="badge badge-direct">Direct Customer</span></td>
+                                <td>david@gmail.com</td>
+                                <td>Nov 22, 2025</td>
+                                <td><i class="fas fa-ellipsis-h"></i></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Samantha Perera</strong></td>
+                                <td><span class="badge badge-direct">Direct Customer</span></td>
+                                <td>sam@email.com</td>
+                                <td>Jan 19, 2024</td>
+                                <td><i class="fas fa-ellipsis-h"></i></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="page-bookings" class="page-view">
+                <div class="page-header">
+                    <h2>All Bookings</h2><button class="add-btn"><i class="fas fa-download"></i> Export Report</button>
+                </div>
+                <div class="data-card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Client</th>
+                                <th>Type</th>
+                                <th>Package/Hotel</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#BK-1045</td>
+                                <td>Samantha Perera</td>
+                                <td>Direct</td>
+                                <td>Galle Heritage</td>
+                                <td>Rs. 45,000</td>
+                                <td><span class="badge badge-confirmed">Confirmed</span></td>
+                            </tr>
+                            <tr>
+                                <td>#BK-301</td>
+                                <td>Tara Johns</td>
+                                <td>Tour Package</td>
+                                <td>Ella Package</td>
+                                <td>Rs 25,000</td>
+                                <td><span class="badge badge-confirmed">Confirmed</span></td>
+                            </tr>
+                            <tr>
+                                <td>#TR-204-02</td>
+                                <td>Classic Travels</td>
+                                <td>Luxury Stay</td>
+                                <td>Luxury Beach Retreat</td>
+                                <td>LKR 210,000</td>
+                                <td><span class="badge badge-confirmed">Confirmed</span></td>
+                            </tr>
+                            <tr>
+                                <td>#BK-504</td>
+                                <td>David Pillaar</td>
+                                <td>Tour Package</td>
+                                <td>Galle – Coastal Heritage Escape</td>
+                                <td>LKR 20,000</td>
+                                <td><span class="badge badge-confirmed">Confirmed</span></td>
+                            </tr>
+                            <tr>
+                                <td>#BK-302</td>
+                                <td>Tara Johns</td>
+                                <td>Hotel Stay</td>
+                                <td>Uga Ulagalla Stay</td>
+                                <td>Rs 35,000</td>
+                                <td><span class="badge badge-pending">Pending</span></td>
+                            </tr>
+                            <tr>
+                                <td>#BK-505</td>
+                                <td>JPP glass (pvt) Ltd</td>
+                                <td>Tour Package</td>
+                                <td>Trincomalee – The Deep Blue Discovery</td>
+                                <td>LKR 55,000</td>
+                                <td><span class="badge badge-confirmed">Confirmed</span></td>
+                            </tr>
+                            <tr>
+                                <td>#TR-204-01</td>
+                                <td>Classic Travels</td>
+                                <td>Cultural Tour</td>
+                                <td>Cultural & Coastal Explorer</td>
+                                <td>LKR 185,000</td>
+                                <td><span class="badge badge-confirmed">Confirmed</span></td>
+                            </tr>
+                            <tr>
+                                <td>#BK-603</td>
+                                <td>Shabeer</td>
+                                <td>Hotel Stay</td>
+                                <td>Jetwing Blue – Negombo</td>
+                                <td>LKR 56,000</td>
+                                <td><span class="badge badge-confirmed">Confirmed</span></td>
+                            </tr>
+                            <tr>
+                                <td>#BK-501</td>
+                                <td>JPP glass (pvt) Ltd</td>
+                                <td>Tour Package</td>
+                                <td>Sigiriya – The Lion's Peak Expedition</td>
+                                <td>LKR 50,000</td>
+                                <td><span class="badge badge-confirmed">Confirmed</span></td>
+                            </tr>
+                            <tr>
+                                <td>#BK-502</td>
+                                <td>David Pillaar</td>
+                                <td>Hotel Stay</td>
+                                <td>Cinnamon Grand Colombo</td>
+                                <td>LKR 70,000</td>
+                                <td><span class="badge badge-pending">Pending</span></td>
+                            </tr>
+                            <tr>
+                                <td>#BK-503</td>
+                                <td>JPP glass (pvt) Ltd</td>
+                                <td>Hotel Stay</td>
+                                <td>Uga Ulagalla – Anuradhapura</td>
+                                <td>LKR 60,000</td>
+                                <td><span class="badge badge-pending">Pending</span></td>
+                            </tr>
+                            <tr>
+                                <td>#BK-601</td>
+                                <td>Shabeer</td>
+                                <td>Hotel Stay</td>
+                                <td>Cape Weligama – Weligama</td>
+                                <td>LKR 50,000</td>
+                                <td><span class="badge badge-confirmed">Confirmed</span></td>
+                            </tr>
+                            <tr>
+                                <td>#TR-204-03</td>
+                                <td>Classic Travels</td>
+                                <td>Wildlife Tour</td>
+                                <td>Heritage & Wildlife Tour</td>
+                                <td>LKR 240,000</td>
+                                <td><span class="badge badge-confirmed">Confirmed</span></td>
+                            </tr>
+                            <tr>
+                                <td>#BK-506</td>
+                                <td>David Pillaar</td>
+                                <td>Hotel Stay</td>
+                                <td>Jetwing Blue – Negombo</td>
+                                <td>LKR 56,000</td>
+                                <td><span class="badge badge-pending">Pending</span></td>
+                            </tr>
+                            <tr>
+                                <td>#BK-602</td>
+                                <td>Shabeer</td>
+                                <td>Tour Package</td>
+                                <td>Sigiriya – The Lion's Peak Expedition</td>
+                                <td>LKR 50,000</td>
+                                <td><span class="badge badge-pending">Pending</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="page-finance" class="page-view">
+                <div class="page-header">
+                    <h2>Financial Overview</h2>
+                    <button class="add-btn"><i class="fas fa-file-invoice"></i> Create Invoice</button>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h4>Total Income</h4>
+                        <p>Rs. 20,240,000</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Net Profit</h4>
+                        <p>Rs. 12,320,500</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Pending Invoices</h4>
+                        <p>12</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Tax Estimates</h4>
+                        <p>Rs. 745,000</p>
+                    </div>
+                </div>
+                <!--service categorized revenue-->
+                <div class="data-card">
+                    <div class="card-header">
+                        <h3>Income by Service</h3>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Service Name</th>
+                                <th>Category</th>
+                                <th>Bookings</th>
+                                <th>Gross Revenue</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Sigiriya – The Lion's Peak Expedition</strong></td>
+                                <td><span class="badge badge-direct">Tour</span></td>
+                                <td>32</td>
+                                <td>Rs. 1,600,000</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Trincomalee – The Deep Blue Discovery</strong></td>
+                                <td><span class="badge badge-direct">Tour</span></td>
+                                <td>24</td>
+                                <td>Rs. 1,320,000</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Galle – Coastal Heritage Escape</strong></td>
+                                <td><span class="badge badge-direct">Tour</span></td>
+                                <td>50</td>
+                                <td>Rs. 1,000,000</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Ella – The Mist-Clad Mountains</strong></td>
+                                <td><span class="badge badge-direct">Tour</span></td>
+                                <td>40</td>
+                                <td>Rs. 1,800,000</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Kandy – The Sacred City Sojourn</strong></td>
+                                <td><span class="badge badge-direct">Tour</span></td>
+                                <td>35</td>
+                                <td>Rs. 1,050,000</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Yala – The Untamed Wilderness Safari</strong></td>
+                                <td><span class="badge badge-direct">Tour</span></td>
+                                <td>28</td>
+                                <td>Rs. 1,540,000</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>Cinnamon Grand Colombo</strong></td>
+                                <td><span class="badge badge-agent">Hotel</span></td>
+                                <td>22</td>
+                                <td>Rs. 1,540,000</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Jetwing Blue – Negombo</strong></td>
+                                <td><span class="badge badge-agent">Hotel</span></td>
+                                <td>18</td>
+                                <td>Rs. 1,008,000</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Uga Ulagalla – Anuradhapura</strong></td>
+                                <td><span class="badge badge-agent">Hotel</span></td>
+                                <td>14</td>
+                                <td>Rs. 840,000</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Cape Weligama – Weligama</strong></td>
+                                <td><span class="badge badge-agent">Hotel</span></td>
+                                <td>12</td>
+                                <td>Rs. 600,000</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Heritage Hotel – Anuradhapura</strong></td>
+                                <td><span class="badge badge-agent">Hotel</span></td>
+                                <td>30</td>
+                                <td>Rs. 540,000</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Galle Fort Hotel – Galle</strong></td>
+                                <td><span class="badge badge-agent">Hotel</span></td>
+                                <td>16</td>
+                                <td>Rs. 1,040,000</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!--invoices-->
+                <div class="data-card">
+                    <div class="card-header">
+                        <h3>Recent Invoices</h3>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Invoice #</th>
+                                <th>Client</th>
+                                <th>Package/Hotel</th>
+                                <th>Name</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr>
+                                <td>#BK-301</td>
+                                <td>Tara Johns</td>
+                                <td>Tour Package</td>
+                                <td>Ella Package</td>
+                                <td>LKR 145,000</td>
+                                <td><span class="badge badge-confirmed">Paid</span></td>
+                            </tr>
+
+                            <tr>
+                                <td>#BK-302</td>
+                                <td>Tara Johns</td>
+                                <td>Hotel Stay</td>
+                                <td>Uga Ulagalla Stay</td>
+                                <td>LKR 60,000</td>
+                                <td><span class="badge badge-pending">Pending</span></td>
+                            </tr>
+
+                            <tr>
+                                <td>#TR-204-A</td>
+                                <td>Classic Travels</td>
+                                <td>Tour Package</td>
+                                <td>Cultural & Coastal Explorer</td>
+                                <td>LKR 185,000</td>
+                                <td><span class="badge badge-confirmed">Paid</span></td>
+                            </tr>
+
+                            <tr>
+                                <td>#TR-204-B</td>
+                                <td>Classic Travels</td>
+                                <td>Hotel Stay</td>
+                                <td>Luxury Beach Retreat</td>
+                                <td>LKR 210,000</td>
+                                <td><span class="badge badge-confirmed">Paid</span></td>
+                            </tr>
+
+                            <tr>
+                                <td>#TR-204-C</td>
+                                <td>Classic Travels</td>
+                                <td>Tour Package</td>
+                                <td>Heritage & Wildlife Tour</td>
+                                <td>LKR 240,000</td>
+                                <td><span class="badge badge-pending">Pending</span></td>
+                            </tr>
+
+                            <tr>
+                                <td>#BK-701</td>
+                                <td>Samantha</td>
+                                <td>Tour Package</td>
+                                <td>Sigiriya – The Lion's Peak</td>
+                                <td>LKR 50,000</td>
+                                <td><span class="badge badge-confirmed">Paid</span></td>
+                            </tr>
+
+                            <tr>
+                                <td>#BK-702</td>
+                                <td>Shabeer</td>
+                                <td>Hotel Stay</td>
+                                <td>Cape Weligama – Weligama</td>
+                                <td>LKR 50,000</td>
+                                <td><span class="badge badge-confirmed">Paid</span></td>
+                            </tr>
+
+                            <tr>
+                                <td>#BK-703</td>
+                                <td>JPP glass (pvt) Ltd</td>
+                                <td>Tour Package</td>
+                                <td>Trincomalee – Deep Blue</td>
+                                <td>LKR 55,000</td>
+                                <td><span class="badge badge-pending">Pending</span></td>
+                            </tr>
+
+                            <tr>
+                                <td>#BK-704</td>
+                                <td>David Pillaar</td>
+                                <td>Tour Package</td>
+                                <td>Galle – Coastal Heritage</td>
+                                <td>LKR 20,000</td>
+                                <td><span class="badge badge-confirmed">Paid</span></td>
+                            </tr>
+
+                            <tr>
+                                <td>#BK-705</td>
+                                <td>Shabeer</td>
+                                <td>Hotel Stay</td>
+                                <td>Jetwing Blue – Negombo</td>
+                                <td>LKR 56,000</td>
+                                <td><span class="badge badge-pending">Pending</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="page-staff" class="page-view">
+                <div class="data-card">
+                    <div class="card-header">
+                        <h3> Internal Staff Directory</h3>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Role</th>
+                                <th>Contact</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Janice</td>
+                                <td>Founder</td>
+                                <td>janice@travelbooker.com</td>
+                            </tr>
+                            <tr>
+                                <td>Poorni</td>
+                                <td>Managing director</td>
+                                <td>poorni@travelbooker.com</td>
+                            </tr>
+                            <tr>
+                                <td>Janani</td>
+                                <td>CEO</td>
+                                <td>janani@travelbooker.com</td>
+                            </tr>
+                            <tr>
+                                <td>Arjun Perera</td>
+                                <td>IT Manager</td>
+                                <td>arjun@travelbooker.com</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="page-settings" class="page-view">
+                <div style="padding: 20px;">
+                    <div class="settings-group" style="margin-bottom: 30px;">
+                        <h4
+                            style="color: var(--navy); margin-bottom: 15px; border-bottom: 2px solid var(--teal); display: inline-block;">
+                            Admin Profile</h4>
+                        <div
+                            style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; background: #f9f9f9; padding: 20px; border-radius: 8px;">
+                            <div>
+                                <label style="display:block; font-size: 12px; color: #666;">Full Name</label>
+                                <input type="text" value="Luvini Perera"
+                                    style="width:100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                            </div>
+                            <div>
+                                <label style="display:block; font-size: 12px; color: #666;">Email Address</label>
+                                <input type="email" value="admin@travelbooker.lk"
+                                    style="width:100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-group" style="margin-bottom: 30px;">
+                        <h4
+                            style="color: var(--navy); margin-bottom: 15px; border-bottom: 2px solid var(--teal); display: inline-block;">
+                            Localization</h4>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <div>
+                                <label style="display:block; font-size: 12px; color: #666;">Default Currency</label>
+                                <select style="width:100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                                    <option>LKR - Sri Lankan Rupee</option>
+                                    <option>USD - US Dollar</option>
+                                    <option>EUR - Euro</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label style="display:block; font-size: 12px; color: #666;">Timezone</label>
+                                <select style="width:100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                                    <option>(GMT+05:30) Colombo</option>
+                                    <option>(GMT+00:00) UTC</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-group" style="margin-bottom: 30px;">
+                        <h4
+                            style="color: var(--navy); margin-bottom: 15px; border-bottom: 2px solid var(--teal); display: inline-block;">
+                            Notifications</h4>
+                        <div style="background: white; border: 1px solid #eee; border-radius: 8px;">
+                            <div
+                                style="padding: 12px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-size: 14px;">Email alerts for new bookings</span>
+                                <input type="checkbox" checked>
+                            </div>
+                            <div
+                                style="padding: 12px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-size: 14px;">Notify on payment confirmation</span>
+                                <input type="checkbox" checked>
+                            </div>
+                            <div
+                                style="padding: 12px; display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-size: 14px;">Weekly revenue reports</span>
+                                <input type="checkbox">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-group">
+                        <h4
+                            style="color: var(--navy); margin-bottom: 15px; border-bottom: 2px solid var(--teal); display: inline-block;">
+                            System Security</h4>
+                        <div style="display: flex; gap: 15px;">
+                            <button
+                                style="background: var(--navy); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-family: 'DM Sans'; font-weight: 500;">Change
+                                Password</button>
+                            <button
+                                style="background: #e74c3c; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-family: 'DM Sans'; font-weight: 500;">Purge
+                                System Logs</button>
+                            <button
+                                style="background: var(--teal); color: white; border: none; padding: 10px 25px; border-radius: 5px; cursor: pointer; font-family: 'DM Sans'; font-weight: 600; margin-left: auto;">Save
+                                Changes</button>
+                        </div>
+                    </div>
+            </div>
+    </div>
+
+    </main>
+    </div>
+
+    <script>
+        function handleLogin() {
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('dashboard').classList.add('visible');
+        }
+
+        function showPage(pageId, element) {
+            // Toggle Views
+            document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+            document.getElementById('page-' + pageId).classList.add('active');
+
+            // Active Menu State
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            element.classList.add('active');
+
+            // Breadcrumb Title
+            const titles = {
+                'overview': 'Overview',
+                'tours': 'Tour Packages',
+                'hotels': 'Hotels',
+                'customers': 'Customer Directory',
+                'bookings': 'Bookings Manager',
+                'finance': 'Finance & Revenue',
+                'staff': 'Staff Directory',
+                'settings': 'System Settings'
+            };
+            document.getElementById('breadcrumb').innerHTML = `Dashboard / <strong>${titles[pageId]}</strong>`;
+        }
+
+    </script>
+
+</body>
+
+</html>
